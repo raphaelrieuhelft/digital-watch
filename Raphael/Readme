@@ -1,0 +1,23 @@
+Instructions d'utilisation : 
+
+-Compiler avec la commande make (on peut nettoyer avec make clean)
+
+-Lancer simulator.byte sur le fichier à traiter. Les options présentes dans le fichier scheduler_test du TP 1 sont supportées.
+
+-Les entrées sont demandées à chaque étape dans le terminal.
+
+-Si des ROMs sont présentes dans le circuit, le programme demande leur contenu avant d'interpréter le circuit, case par case. Les numéros des cases sont indiqués en base 10 dans le terminal, la case correspondante dans le circuit est codée par le même entier en base 2 avec le bit de poids le plus fort en premier.
+
+Choix techniques :
+
+Sens de l'instruction MUX : j'ai été étonné de voir que dans le simulateur fourni dans le TP1, MUX a b c s'interprète en "if a then c else b" (je m'attendais à "if a then b else c" d'après le poly de cours). J'ai suivi l'exemple du simulateur du TP1.
+
+Scheduling des registres : j'ai inversé le sens des dépendances entre les fils à chaque extrémité d'un registre, ce qui permet de casser les cycles combinatoires.
+
+Cycles de registres : Si des cycles de registres sont présents, ils sont détectés au moment du scheduling. Tous les registres du cycle sont alors remplacés par des constantes nulles et la simulation a lieu.
+
+Conversions de types autorisées : n'étant pas sûr de la sémantique du typage du langage de net-lists, j'ai autorisé les conversions entre fil et nappe de 1 fil (il y en a une dans le fichier de test ram.net fourni dans le TP1). Plus précisément, lorsque je calcule une valeur, je compare le type calculé avec le type présent dans p.p_vars, et je la convertis en le type attendu le cas échéant. Si la conversion est impossible (fil en nappe de n fils, n!=1 et vice versa) mon programme échoue. J'autorise aussi d'utiliser l'instruction CONCAT à la fois sur des fils et des nappes.
+
+Mon simulateur supporte l'existence de plusieurs blocs RAM/ROM indépendants, pour lesquels les paramètre addr_size et word_size sont éventuellement différents. J'utilise pour cela une table de hashage globale mems, de type (ident, (value array)) Hashtbl.t : une RAM est donc un tableau de valeurs, qui est censé être de taille 2^addr_size et ne contenir que des valeurs de type TBitArray(word_size), mais je ne fais pas ces vérifications (je suppose que la net-list en entrée est bien typée).
+
+Scheduling des RAMs : la valeur écrite dans une RAM n'a pas d'influence avant le cycle suivant ; on peut donc écrire dans les RAMs après avoir évalué toutes les autres équations. Au scheduling, je considère donc que la valeur en sortie d'une RAM ne dépend que de l'adresse de lecture. À l'interprétation, je ne fais que la lecture dans la RAM quand je lis l'équation o = RAM ..., puis après avoir évalué toutes les équations, je parcours de nouveau la liste des équations et j'écris dans toutes les RAMs qui en ont besoin.
