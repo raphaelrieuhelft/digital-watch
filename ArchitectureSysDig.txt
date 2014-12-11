@@ -1,0 +1,29 @@
+Architecture : comme celle du cours en réduisant autant que possible la taille des instructions (passer à 16 bits ?) et la taille des mots mémoire, et en enlevant la RAM 
+(donc un PC, une ROM contenant le programme, et 32 registres) et en ajoutant les fils d'entrées/sorties suivants, avec lesquels on communique via des instructions spécifiques :
+
+- pour chaque chiffre à afficher, une nappe de 7 fils de sortie ("bâtons" de l'afficheur à cristaux liquides). Chaque fil est en sortie d'un flip-flop ("registre" dans le vocabulaire du simulateur), 
+la nappe est protégée par un mux pour ne modifier sa valeur que si nécessaire et afficher en continu. En amont, un circuit Dec7 convertit l'entier à afficher en bâtonnets.
+
+- Boutons d'arrêt/réglage de l'heure représentés par des fils d'entrées branchés sur des flip-flops dont le programme vérifie l'état régulièrement
+
+- Un fil d'entrée branché sur un flip-flop tient lieu de quartz : à une fréquence fixée (1024 Hz si on y arrive, c'est traditionnellement ça mais la boucle du programme doit s'exécuter entièrement entre deux tics de quartz),
+ le simulateur CAML passe l'entrée (donc le flip-flop) à 1. 
+
+Boucle principale : 
+
+tester si on appuie sur des boutons d'arrêt/réglage de la montre, si oui gérer ça
+WHILE (quartz à 0) FIN WHILE
+Remettre le flip-flop de quartz à 0
+Incrémenter un compteur de tics, le cas échéant incrémenter les secondes/minutes/heures (si le compteur atteint 1024) et changer les valeurs affichées à l'écran
+GOTO début
+
+
+Quelques idées d'utilisation des registres pour accélérer le plus possible la boucle : 
+
+Un registre fixé contient toujours le nombre de tics de quartz modulo 1024, on incrémente les secondes quand il passe à 0
+
+Utiliser un registre fixé pour chaque chiffre affiché à l'écran (pour les minutes et les secondes, il suffit alors d'incrémenter et tester l'égalité à 6/10 pour savoir s'il y a retenue)
+pour les heures il faut sans doute un autre registre qui contient le nombre d'heures total parce qu'il n'y a pas retenue à chaque fois que les heures passent à 4 modulo 10)
+Pour les jours/mois/années, on utilise aussi un registre par chiffre et un registre pour le nombre total.
+C'est un peu lourd, mais ça fait du code beaucoup plus court a priori (beaucoup moins de calculs de modulo que si on prenait juste un registre par nombre).
+On utilise donc une quinzaine de registres pour contenir les données de l'écran, il en reste a priori encore bien assez pour faire tous les calculs nécessaires.
