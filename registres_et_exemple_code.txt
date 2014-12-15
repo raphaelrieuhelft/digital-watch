@@ -1,0 +1,89 @@
+
+
+Registres :
+
+$t0, $t1, etc. (nombre à déterminer) : temporaires
+
+$qa : tics quartz
+
+$sc0 : unités secondes
+$sc1 : dizaines secondes
+$mn0 : unités minutes
+$mn1 : dizaines minutes
+$hr0 : unités heures
+$hr1 : dizaines heures
+$hr : total heures
+$da0 : unités jours
+$da1 : dizaines jours
+$da : total jours
+$mo0 : unités mois
+$mo1 : dizaines mois
+$mo : total mois
+$yr0 : unités ans
+$yr1 : dizaines ans
+$yr : total ans
+
+$nda : nombre de jours dans le mois courant
+
+
+$k0 : destination de l'instruction lbi ; on y stocke la fréquence du quartz, ou 1 si on veut faire tourner la montre le plus vite possible
+$ra : adresse de retour (nécessaire?)
+$zero : toujours 0
+
+
+
+Immédiate de Send Digit :
+0 : unités secondes
+1 : dizaines secondes
+2 : unités minutes
+3 : dizaines minutes
+4 : unités heures
+5 : dizaines heures
+6 : unités jours
+7 : dizaines jours
+8 : unités mois
+9 : dizaines mois
+10 : unités ans
+11 : dizaines ans
+
+	
+on a a géré secondes, minutes, heures, jours, et vu qu'on change de mois
+	
+	incr $mo
+	cbeq $mo 13
+	j L0
+	li $mo 1
+	li $mo0 1
+	li $mo1 0
+	j L1
+L0:	incr $mo0 $mo0
+	cbeq $mo0 10
+	j L1
+	li $mo 0
+	incr $m1 $m1
+L1: sd $m0 8		//affichage
+	sd $m1 9		//affichage
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
