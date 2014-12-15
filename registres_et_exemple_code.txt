@@ -28,6 +28,7 @@ $nda : nombre de jours dans le mois courant
 
 $k0 : destination de l'instruction lbi ; on y stocke la fréquence du quartz, ou 1 si on veut faire tourner la montre le plus vite possible
 $ra : adresse de retour (nécessaire?)
+$at : temporaire assembleur, utilisé pour la pseudoinstruction cbeqi
 $zero : toujours 0
 
 
@@ -49,23 +50,44 @@ Immédiate de Send Digit :
 	
 on a a géré secondes, minutes, heures, jours, et vu qu'on change de mois
 	
+	//incrémentation du mois et affichage
 	incr $mo
-	cbeq $mo 13
+	cbeqi $mo 13
 	j L0
 	li $mo 1
 	li $mo0 1
 	li $mo1 0
 	j L1
 L0:	incr $mo0 $mo0
-	cbeq $mo0 10
+	cbeqi $mo0 10
 	j L1
 	li $mo 0
 	incr $m1 $m1
-L1: sd $m0 8		//affichage
-	sd $m1 9		//affichage
+L1: sd $m0 8		//changement de l'affichage
+	sd $m1 9		//changement de l'affichage
 	
-	
-	
+	//actualisation de $nda
+	cbeqi $nda 31 //après un mois à <31 jours vient toujours un mois à 31 jours
+	j L2
+	li $nda 30 //la plupart du temps, après un mois à 31 jours, vient un à 30 jours...
+	cbeqi $nda 8 //...sauf si c'est août...
+	j L3
+	j L2
+L3:	cbeqi $mo 1 //...ou janvier...
+	j L4
+	j L2
+L4: cbeqi $mo 2 //...ou février
+	j L5
+	li $nda 28
+	modf $an $t0
+	cbeqi $to $zero //année bissextile?
+	li $nda 29
+	j L5
+L2: li $nda 31
+L5: cbeqi $mo 1
+	j debut //retourner au début du code : on a fini le tour de boucle
+	incr $an
+	// puis incrémenter $an0, éventuellement $an1 etc.
 	
 
 
