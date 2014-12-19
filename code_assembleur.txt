@@ -1,0 +1,170 @@
+
+//TODO: boutons
+
+debut:	lin $t0 0
+		cbeq $t0 $s0
+		j boucle
+		j debut
+				
+		
+boucle:	mv $t0 $s0 //ajouter instruction move? peut utiliser lin
+		incr $qa $qa
+		cbeq $qa $k0
+		j debut
+		li $qa 0
+		
+		//gestion unités secondes
+		incr $sc0 $sc0
+		cbeqi $sc0 10
+		j printsc0debut
+		li $sc0 0
+		sd $sc0 0
+		
+		//gestion dizaines secondes
+		incr $sc1 $sc1
+		cbeqi $sc1 6
+		j printsc1debut
+		li $sc1 0
+		sd $sc1 1
+		
+		//gestion unités minutes
+		incr $mn0 $mn0
+		cbeqi $mn0 10
+		j printmn0debut
+		li $mn0 0
+		sd $mn0 2
+		
+		//gestion dizaines minutes
+		incr $mn1 $mn1
+		cbeqi $mn1 6
+		j printmn1debut
+		li $mn1 0
+		sd $mn1 3
+		
+		//gestion heures
+		incr $hr0 $hr0
+		cbeqi $hr0 4
+		j suitehrdebut
+		cbeqi $hr1 2
+		j suitehrdebut
+		li $hr0 0
+		li $hr1 0
+		sd $hr0 4
+		sd $hr1 5
+		
+		//gestion jours
+		cbeq $da $nda
+		j suitedadebut
+		li $da 1
+		li $da0 1
+		li $da1 0
+		sd $da0 6
+		sd $da1 7
+
+		//gestion mois
+		cbeqi $mo 12
+		j suitemodebut
+		li $mo 1
+		li $mo0 1
+		li $mo1 0
+		li $nda 31
+		sd $mo0 8
+		sd $mo1 9
+		
+		//gestion unités années
+		incr $an
+		incr $an0
+		cbeqi $an0 10
+		j printan0debut
+		li $an0 0
+		sd $an0 10
+		
+		//gestion dizaines années
+		incr $an1
+		cbeqi $an1 10
+		j print an1debut
+		li $an1 0
+		li $an 0
+		sd $an1 11
+		
+		j debut
+		
+		
+printsc0debut:
+		sd $sc0 0
+		j debut
+		
+printsc1debut:
+		sd $sc1 1
+		j debut
+		
+printmn0debut:
+		sd $mn0 2
+		j debut
+		
+printmn1debut:
+		sd $mn1 3
+		j debut
+		
+suitehrdebut:		
+		cbeqi $hr0 0
+		j printhr0debut
+		li $hr0 0
+		incr $hr1 $hr1
+		sd $hr1 5
+printhr0debut:
+		sd $hr0 4
+		j debut		
+		
+suitedadebut:
+		incr $da
+		incr $da0 $da0
+		cbeqi $da 10
+		j printda0debut
+		li $da0 0
+		incr $da1 $da1
+		sd $da1 7
+printda0debut:
+		sd $da0 6
+		j debut
+		
+suitemodebut:
+		incr $mo $mo
+		incr $mo0 $mo0
+		cbeq $mo0 10
+		j printmo0
+		li $mo0 0
+		incr $mo1 $mo1
+		sd $mo1 9
+printmo0:	
+		sd $mo0 8
+//actualisation de $nda
+		cbeqi $nda 31 
+		j set31		//après un mois à <31 jours vient toujours un mois à 31 jours
+		//après un mois à 31 jours, vient un à 30 jours, sauf août, février (janvier a déjà été testé)
+		cbeqi $nda 8 //août ?
+		j pasaout
+		j set31
+pasaout:
+		cbeqi $mo 2 //février ?
+		j set30
+		li $nda 28
+		modf $an $t0
+		cbeqi $to $zero //année bissextile?
+		li $nda 29
+		j debut
+set31:	li $nda 31
+		j debut
+set30:	li $nda 30
+		j debut
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		

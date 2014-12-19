@@ -4,6 +4,7 @@ Registres :
 
 $t0, $t1, etc. (nombre à déterminer) : temporaires
 
+$s0 (nom à revoir) : dernier état vu du quartz
 $qa : tics quartz
 
 $sc0 : unités secondes
@@ -33,7 +34,7 @@ $zero : toujours 0
 
 
 
-Immédiate de Send Digit :
+Immediate de Send Digit :
 0 : unités secondes
 1 : dizaines secondes
 2 : unités minutes
