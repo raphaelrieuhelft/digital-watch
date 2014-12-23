@@ -1,0 +1,73 @@
+
+
+Registres :
+
+$t0, $t1, etc. (nombre à déterminer) : temporaires
+
+
+
+$qt : tics quartz
+$sc0 : unités secondes
+$sc1 : dizaines secondes
+$mn0 : unités minutes
+$mn1 : dizaines minutes
+$hr0 : unités heures
+$hr1 : dizaines heures
+($hr : total heures) supprimé
+$da0 : unités jours
+$da1 : dizaines jours
+$da : total jours
+$mo0 : unités mois
+$mo1 : dizaines mois
+$mo : total mois
+$yr0 : unités ans
+$yr1 : dizaines ans
+$yr : total ans
+
+$nda : nombre de jours dans le mois courant
+
+$cr : réglage courant
+
+($s0 (nom à revoir) : dernier état vu du quartz) -> $in0
+$in0, $in1, $in2, $in3, $in4, $in5 : dernier état vu de chaque entrée
+
+$k0 : destination de l'instruction lbi ; on y stocke la fréquence du quartz, ou 1 si on veut faire tourner la montre le plus vite possible
+($ra : adresse de retour) sans doute supprimé
+$at : temporaire assembleur, utilisé pour la pseudoinstruction cbeqi
+$zero : toujours 0
+
+
+
+Immediate de Load Input :
+0 : simulation de quartz (créneaux)
+1 : marche/pause (0:pause, 1:marche)
+2 : changer réglage courant
+3 : incrémenter grandeur correspondant au réglage courant
+4 : reset (an 2000 ?)
+5 : changer vitesse (0:normale, 1:maximale)
+appuyer sur un bouton se manifeste par un changement d'état entre 0 et 1
+
+Immediate de Send Digit / Send Output :
+0 : unités secondes
+1 : dizaines secondes
+2 : unités minutes
+3 : dizaines minutes
+4 : unités heures
+5 : dizaines heures
+6 : unités jours
+7 : dizaines jours
+8 : unités mois
+9 : dizaines mois
+10 : unités ans
+11 : dizaines ans
+12 : réglage courant
+  (	0 : rien car mode marche
+	1 : secondes
+	2 : minutes
+	3 : heures
+	4 : jours
+	5 : mois
+	6 : année
+  )
+
+	
