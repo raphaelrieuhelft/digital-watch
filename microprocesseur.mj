@@ -1,0 +1,68 @@
+const code_wordsize = 16
+const code_addrsize = 9
+const reg_addrsize = 5
+const reg_wordsize = 12
+const out_addrsize = 4
+const out_wordsize = 7
+
+(*MUX a b c = if a then b else c*)
+
+halfadder(a,b)=(s,r) where
+	r=a&b;
+	s=a xor b
+end where
+
+(*Increments by 1. s should be >=1*)
+Incr<s>(in:[s])=(out:[s], c_out) where
+	if s = 1 then
+    out[0] = not(in[0]);
+	c_out=in[0];
+	else
+	(out1:[s-1], c1_out)=Incr<s-1>(in[..s-2]);
+	(out2, c_out)=halfadder(c1_out, in[s-1]);
+	out=out1.out2
+end where
+
+(*Increments by 2. s should be >=2*)
+Incr2<s>(in:[s])=(out:[s], c_out) where
+	(out1:[s-1], c_out)=Incr<s-1>(in[1..]);
+	out = in[0].out1
+end where
+	
+	
+PC(in:[code_addrsize])=(out:[code_addrsize]) where
+	out[0]=reg(in[0]);
+	out[1]=reg(in[1]);
+	out[2]=reg(in[2]);
+	out[3]=reg(in[3]);
+	out[4]=reg(in[4]);
+	out[5]=reg(in[5]);
+	out[6]=reg(in[6]);
+	out[7]=reg(in[7]);
+	out[8]=reg(in[8])
+end where
+
+program(instr:[code_wordsize], J, branchJump)=(next_instr[code_wordsize]) where
+	imm:[code_addrsize] = instr[4..12];
+	JumpAddr=mux(J, imm, Incr<code_addrsize>(pcOut));
+	Addr = mux(branchJump, Incr2<code_addrsize>(pcOut), jumpAddr);
+	pcOut = PC(Addr);
+	next_instr = rom<code_addrsize,code_wordsize>(pcOut)
+end where
+
+CtrlFlow(instr:[code_wordsize])=(A,B,C,D,E,F,G,H,I,J,K) where
+	opcode:[4] = instr[0..3];
+	F=opcode[0];
+	E=opcode[1];
+	G=opcode[2];
+	B=G;
+	A=opcode[3];
+	C=not(E); (*TODO : =E and flip mux*)
+	D=not((E or G) or A);
+	H=G;
+	I=not(F or E);
+	J = mux(F,0,E);
+	K = J&G
+end where
+	
+
