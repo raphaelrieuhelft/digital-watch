@@ -7,25 +7,44 @@ const out_wordsize = 7
 
 (*MUX a b c = if a then b else c*)
 
+power<n>(i) = (o:[n]) where
+	if n = 1 then
+		o = i
+	else
+		o = power<n-1>(i) . i
+	end if
+end where
+
+mux_n<n>(c, a:[n], b:[n]) = (o:[n]) where
+	if n = 0 then
+		o = []
+	else
+		o_n1 = mux_n<n-1>(c, a[1..n-1], b[1..n-1]);
+		o_n = mux(c, a[0], b[0]);
+		o = o_n . o_n1
+	end if
+end where
+
 halfadder(a,b)=(s,r) where
 	r=a&b;
 	s=a xor b
 end where
 
-(*Increments by 1. s should be >=1*)
-Incr<s>(in:[s])=(out:[s], c_out) where
+(*in3ements by 1. s should be >=1*)
+in3<s>(in:[s])=(out:[s], c_out) where
 	if s = 1 then
-    out[0] = not(in[0]);
-	c_out=in[0];
+		out[0] = not(in[0]);
+		c_out=in[0];
 	else
-	(out1:[s-1], c1_out)=Incr<s-1>(in[..s-2]);
-	(out2, c_out)=halfadder(c1_out, in[s-1]);
-	out=out1.out2
+		(out1:[s-1], c1_out)=in3<s-1>(in[..s-2]);
+		(out2, c_out)=halfadder(c1_out, in[s-1]);
+		out=out1.out2
+	end if
 end where
 
-(*Increments by 2. s should be >=2*)
-Incr2<s>(in:[s])=(out:[s], c_out) where
-	(out1:[s-1], c_out)=Incr<s-1>(in[1..]);
+(*in3ements by 2. s should be >=2*)
+in32<s>(in:[s])=(out:[s], c_out) where
+	(out1:[s-1], c_out)=in3<s-1>(in[1..]);
 	out = in[0].out1
 end where
 	
@@ -44,25 +63,96 @@ end where
 
 program(instr:[code_wordsize], J, branchJump)=(next_instr[code_wordsize]) where
 	imm:[code_addrsize] = instr[4..12];
-	JumpAddr=mux(J, imm, Incr<code_addrsize>(pcOut));
-	Addr = mux(branchJump, Incr2<code_addrsize>(pcOut), jumpAddr);
+	JumpAddr=mux(J, imm, in3<code_addrsize>(pcOut));
+	Addr = mux(branchJump, in32<code_addrsize>(pcOut), jumpAddr);
 	pcOut = PC(Addr);
 	next_instr = rom<code_addrsize,code_wordsize>(pcOut)
 end where
 
-CtrlFlow(instr:[code_wordsize])=(A,B,C,D,E,F,G,H,I,J,K) where
+CtrlFlow(instr:[code_wordsize])=(A,D,E,F,G,I,J,K) where
 	opcode:[4] = instr[0..3];
 	F=opcode[0];
-	E=opcode[1];
+	E=opcode[1]; 
 	G=opcode[2];
-	B=G;
 	A=opcode[3];
-	C=not(E); (*TODO : =E and flip mux*)
 	D=not((E or G) or A);
-	H=G;
 	I=not(F or E);
-	J = mux(F,0,E);
-	K = J&G
+	JK = mux(F,0,E);
+	J = mux(G, 0, JK);
+	K = mux(G, JK, 0);
+end where
+
+
+regRAM(ra1:[reg_addrsize], ra2:[reg_addrsize], wa:[reg_addrsize], wdata:[reg_wordsize], we)=(out1:[reg_wordsize], out2:[reg_wordsize]) where
+	out1=ram<reg_addrsize, reg_wordsize>(ra1, wa, wdata, we);
+	out2=ram<reg_addrsize, reg_wordsize>(ra2, wa, wdata, we)
+end where
+
+NotEqual<s>(in1:[s], in2:[s])=(out) where
+	if s=0 then
+		out = 0;
+	else
+		out1=NotEqual<s-1>(in1:[1..], in2:[1..]);
+		out = out1 or (in1[0] xor in2[0])
+	end if
+end where
+
+	
+	
+registers(instr:[code_wordsize], inImm[reg_wordsize], A, D, E, F, G)=(out1:[reg_wordsize], outNeq) where
+	rs:[reg_addrsize]=instr[4..8];
+	rt:[reg_addrsize]=instr[9..13];
+	immLi:[7]=instr[9..15];
+	immLbi:[reg_wordsize]=instr[4..15];
+	immLiExt:[reg_wordsize]=immLi.power<reg_wordsize-7>(0);
+	immInstr:[reg_wordsize]=mux_n<reg_wordsize>(A, immLiExt, immLbi);
+	imm:[reg_wordsize]=mux_n<reg_wordsize>(G, inImm, immInstr);
+	k0:[reg_addrsize]=power<reg_addrsize>(1);
+	wa1:[reg_addrsize]=mux_n<reg_addrsize>(E, rt, rs);
+	wa:[reg_addrsize]=mux_n<reg_addrsize>(D, k0, wa1);
+	(outin3:[reg_wordsize], c_out)=in3<reg_wordsize>(out1);
+	outMod4:[2]=out1[0..1];
+	outMod4Ext:[reg_wordsize]=outMod4.power<reg_wordsize-2>(0);
+	outCalc:[reg_wordsize]=mux_n<reg_wordsize>(G, outin3, outMod4Ext);
+	wdata:[reg_wordsize]=mux_n<reg_wordsize>(E, outCalc, imm);
+	(out1:[reg_wordsize], out2:[reg_wordsize])=regRAM(rs, rt, wa, wdata, F);
+	outNeq=NotEqual<reg_wordsize>(out1,out2)
+end where
+
+Dec7(int:[4])=(lcd:[7]) where
+
+(*TODO*)
+
+end where
+	
+outRAM(instr:[code_wordsize], regOut:[reg_wordsize], G, I)=(out:[out_wordsize]) where
+	immInstr:[out_addrsize]=instr[9..12];
+	out4:[4]=regOut[0..3];
+	outDigits:[out_wordsize]=Dec7(out4);
+	outRaw:[out_wordsize]=regOut[0..6];
+	wdata=mux_n<out_wordsize>(G, outDigits, outRaw);
+	out=ram<out_addrsize, out_wordsize>(immInstr, wdata, I)
+end where
+
+inputs(instr:[code_wordsize],in0, in1, in2, in3, in4, in5)=(inImm:[reg_wordsize]) where
+	c0=instr[9];
+	c1=instr[10];
+	c2=instr[11];
+	qp=mux(c0, in5, in4);
+	is=mux(c0, in3, in2);
+	sr=mux(c0, in1, in0);
+	issr=mux(c1, is, sr);
+	inBit=mux(c2, qp, issr);
+	inImm=inBit.power<reg_wordsize-1>(0)
+end where
+	
+main(in0, in1, in2, in3, in4, in5)=() where
+	branchJump=mux(outNeq, 0, K);
+	instr:[code_wordsize]=program(instr, J, branchJump);
+	(A,D,E,F,G,I,J,K)=CtrlFlow(instr);
+	inImm:[reg_wordsize]=inputs(instr, in0, in1, in2, in3, in4, in5);
+	(regOut:[reg_wordsize], outNeq)=registers(instr, inImm, A,D,E,F,G);
+	output:[out_wordsize]=outRAM(instr, regOut, G, I)
 end where
 	
 
