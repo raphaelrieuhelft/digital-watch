@@ -2,9 +2,33 @@
 
 Registres :
 
-$t0, $t1, etc. (nombre à déterminer) : temporaires
+0 = $zero
+1 = $at
+2 = $qt
+3 = $sc0
+4 = $sc1
+5 = $mn0
+6 = $mn1
+7 = $hr0
+8 = $hr1
+9 = $da0
+10 = $da1
+11 = $da
+12 = $mo0
+13 = $mo1
+14 = $mo
+15 = $yr0
+16 = $yr1
+17 = $yr
+18 = $nda
+19-25 = $t0-$t6
+26-29 = $s0-$s3
+30 = $cr
+31 = $k0
 
 
+$t0-$t6 : temporaires non-sauvegardés
+$s0-$s3 : temporaires sauvegardés à travers les appels
 
 $qt : tics quartz
 $sc0 : unités secondes
