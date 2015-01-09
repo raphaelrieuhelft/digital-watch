@@ -4,7 +4,7 @@ type instruction =
   | Ili of int*int
   | Iincr of int*int
   | Imodf of int*int
-  | Ilbi of int
+  | Ilbi of int           (*écrit l'entier dans le registre 31*)
   | Ilin of int*int
   | Iso of int*int
   | Isd of int*int
