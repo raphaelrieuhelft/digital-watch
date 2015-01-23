@@ -1,3 +1,5 @@
+(* initial *)
+
 type instruction =
   | PIcbeq of int*int
   | PIj of string
@@ -8,7 +10,7 @@ type instruction =
   | PIlin of int*int
   | PIso of int*int
   | PIsd of int*int
-  | PIcbeqi of int*int
+  | PIcbeqi of int*int (* Instruction double *)
 
 type ligne = (string option)*instruction*int (*label, position*)
 (*/!\ position = numero de ligne dans le code initial, pas numero de l'instruction à cause des pseudoinstructions, à utiliser pour les messages d'erreur*)
