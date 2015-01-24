@@ -1,7 +1,8 @@
-let print_only = ref false
+
+let print_scheduled = ref false
 let number_steps = ref (-1)
 
-let compile filename =
+let main () =
   try
     let p = Netlist.read_file filename in
     let out_name = (Filename.chop_suffix filename ".net") ^ "_sch.net" in
@@ -23,17 +24,3 @@ let compile filename =
   with
     | Netlist.Parse_error s -> Format.eprintf "An error accurred: %s@." s; exit 2
 	
-	
-
-let main () =
-  Arg.parse
-    ["-print", Arg.Set print_only, "Only print the result of scheduling";
-     "-n", Arg.Set_int number_steps, "Number of steps to simulate";
-     "-rand", Arg.Set Read_value.random, "Generates random entries instead of asking user";
-     "-wait", Arg.Set Netlist_interp.wait_between_cycles, "Between cycles, wait for user to hit enter";
-    ]
-    compile
-    ""
-;;
-
-main ()

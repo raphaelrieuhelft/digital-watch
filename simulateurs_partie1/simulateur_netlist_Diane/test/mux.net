@@ -1,8 +1,0 @@
-INPUT a, b, c
-OUTPUT o
-VAR
-  a, b, c, o
-IN
-o = MUX a b c
-
-
