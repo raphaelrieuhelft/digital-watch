@@ -41,7 +41,6 @@ let traite t =
         (*afficher ramaff ;
         print_newline() ;*)
         if i < n then begin match fst t.(i) with
-            | Ivide -> aux (i+1)
             | Icbeq(x,y) -> if regs.(x) = regs.(y) then aux (i+2) else aux(i+1)
             | Ij x -> aux x
             | Ili (x,y) -> regs.(x) <- y ; aux (i+1)

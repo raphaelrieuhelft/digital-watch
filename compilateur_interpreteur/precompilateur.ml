@@ -40,7 +40,7 @@ let make_labels p =
   
 let handle_labels labels = List.map (fun (_,instr,pos) ->
   match instr with
-    | PIvide -> (Ast.Ivide, pos)
+    | PIvide ->  assert false (*(Ast.Ivide, pos)*)
     | PIj lab -> begin try (Ij (Smap.find lab labels), pos)
 	  with Not_found -> raise (LabelInexistant (lab,pos)) end
 	| PIcbeq(a,b) -> (Icbeq(a,b), pos)
