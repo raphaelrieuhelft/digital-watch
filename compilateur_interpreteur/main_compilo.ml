@@ -44,14 +44,14 @@ let () =
 
   (* On vérifie que le nom du fichier source a bien été indiqué *)
   if !ifile="" then begin eprintf "Aucun fichier à compiler\n@?"; exit 1 end; 
-
+(*
   (* Ce fichier doit avoir l'extension .cpp *)
   if not (Filename.check_suffix !ifile ".cpp") then begin
     eprintf "Le fichier d'entrée doit avoir l'extension .cpp\n@?";
     Arg.usage options usage;
     exit 1
   end;
-
+*)
   if !ofile="" then ofile := Filename.chop_suffix !ifile ".exp" ^ ".s";
   (* Ouverture du fichier source en lecture *)
   let f = open_in !ifile in
@@ -65,20 +65,16 @@ let () =
        n'est détectée.
        La fonction Lexer.token est utilisée par Parser.prog pour obtenir 
        le prochain token. *)
-    let p = Parser.fichier Lexer.token buf in
+    let p = Parser.prog Lexer.token buf in
 	close_in f ;
        	(* On s'arrête ici si on ne veut faire que le parsing *)
    	if !parse_only then 
 		exit 0
-   	else let tarbre = Typing.typfichier p in
-   			if !type_only then
-				(*print_string "Typage correct\n";*)
-				exit 0
-			else begin
-				Compilateur.compile_fichier tarbre !ofile ;
+    else exit 0 ;(*let tarbre = Typing.typfichier p in*)
+				(*Compilateur.compile_fichier tarbre !ofile ;
 				(*print_string "OK.\n";*)
 				exit 0;
-			end
+			end*)
        	(*Interp.prog p *)
   with
     | Lexer.Lexing_error c -> 
@@ -93,21 +89,6 @@ let () =
 	localisation (Lexing.lexeme_start_p buf);
 	eprintf "Erreur dans l'analyse syntaxique@.";
 	exit 1
-    | Typing.Error (loc, s) -> 
-	(* Erreur syntaxique. On récupère sa position absolue et on la 
-	   convertit en numéro de ligne *)
-	localisation (fst loc) ;
-	(*localisation (snd loc) ;*)
-	doublelocal loc ;
-	eprintf "Erreur dans le typage: %s@." s;
-	exit 1
-    | Typing.Not_implementedt s | Compilateur.Not_implementedc s ->
-	localisation (Lexing.lexeme_start_p buf);
-	eprintf "Erreur du compilateur (caractéristique non implémentée) :  %s" s;
-	exit 3
-    | Typing.Class_not_found s -> localisation (Lexing.lexeme_start_p buf);
-        eprintf "Erreur du compilateur (provisoire) :  %s" s;
-        exit 2
     | Failure s ->
 	localisation (Lexing.lexeme_start_p buf);
         eprintf "Erreur du compilateur : message :  %s" s;

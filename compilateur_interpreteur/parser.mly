@@ -1,5 +1,5 @@
 
-/* Analyseur syntaxique pour Mini-C++ */
+/* Analyseur syntaxique  */
 
 %{
   open Ast_precompilation
@@ -8,7 +8,7 @@
 %token <int> INTEGER
 %token <int> REG
 %token <string> LABEL
-%token <string> CHAINE
+%token COLON
 %token ENDL
 %token CBEQ J LI INCR MODF LBI LIN SO SD CBEQI
 %token EOF
@@ -23,10 +23,12 @@
 %%
 
 prog:
-    | ENDL * ; x = ligne * { x } ;
+    | ENDL * ; x = ligne * ; EOF { x } ;
 
+label:
+    | l = LABEL ; COLON {l} ;
 ligne:
-    l = option(LABEL) ; i = inst ; ENDL ; ENDL *  {(l, i, 0)} ; /* moyen pour ligne ? au pire on rénumérote après */
+    l = option(label) ; i = inst ; ENDL ; ENDL *  {(l, i, 0)} ; /* moyen pour ligne ? au pire on rénumérote après */
 
 inst:
     | CBEQ ; x = REG ; y = REG  { PIcbeq (x,y) }
@@ -34,7 +36,7 @@ inst:
     | LI ; x = REG ; y = INTEGER {PIli (x,y) }
     | INCR ; x = REG ; y = REG {PIincr(x,y) }
     | MODF ; x = REG ; y = REG {PImodf(x,y) }
-    | LBI ; x = INTEGER  {PIlbi(x)
+    | LBI ; x = INTEGER  {PIlbi(x)}
     | LIN ; x = REG ; y = INTEGER { PIlin(x,y) }
     | SO ; x = REG ; y = INTEGER { PIso(x,y) }
     | SD ; x = REG ; y = INTEGER { PIsd(x,y) }

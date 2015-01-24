@@ -8,6 +8,11 @@ module Smap = Map.Make(String) end
 
 let reg_at = 1 (*?*)
 
+(* Si pas traité avant, on numérote les lignes *)
+let rec numerote_lignes pos = function
+  | [] -> []
+  | (so, inst, _)::l -> (so, inst, pos)::(numerote_lignes (pos+1) l)
+
 let rec handle_cbeqi = function
   | [] -> []
   | (so, PIcbeqi(rs,imm), pos)::tl ->

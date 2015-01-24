@@ -11,7 +11,7 @@
   let kwd_tbl = 
       ["cbeq", CBEQ ; "j", J ;
       "li", LI ; "incr", INCR ; "modf", MODF ; "lbi", LBI ;
-      "lin", LIN ; "so", SO, "sd", SD ;
+      "lin", LIN ; "so", SO; "sd", SD ;
       "cbeqi", CBEQI
     ]
 
