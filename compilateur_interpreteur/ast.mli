@@ -1,4 +1,5 @@
 type instruction = 
+  | Ivide
   | Icbeq of int*int
   | Ij of int
   | Ili of int*int

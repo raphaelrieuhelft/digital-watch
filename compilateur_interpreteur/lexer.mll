@@ -47,7 +47,14 @@ let reg_tbl =
     "$s2" , 28 ;
     "$s3" , 29 ;
     "$cr" , 30 ;
-    "$k0" , 31 ; ]
+    "$k0" , 31 ; 
+    "$in0", 32 ;
+    "$in1", 33;
+    "$in2", 34 ;
+    "$in3", 35 ;
+    "$in4", 36 ;
+    "$in5", 37
+      ]
 
   let id_or_kwd = 
     let h = Hashtbl.create 100 in
@@ -67,7 +74,8 @@ let reg_tbl =
 
 let letter = ['a'-'z' 'A'-'Z']
 let digit = ['0'-'9']
-let ident = ("$")* ( letter | '_' ) ( letter | digit | '_' )*
+let ident = "$"? ( letter | '_' ) ( letter | digit | '_' )*
+(*let rident = "$" ident*)
 let integer = '0' | ['1'-'9'] digit*
 let space = [' ' '\t']
 let char = [' '-'!' '#'-'[' ']'-'\127'] | "\\" | "\"" | '\n' | '\t'
@@ -77,6 +85,7 @@ rule token = parse
   | '\n'    { newline lexbuf; ENDL (*token lexbuf*) } (* il faut en tenir compte *)
   | space+  { token lexbuf }
   | ident as id { id_or_kwd id }
+(*  | rident as id {id_or_kwd id} *)
   | ':'     { COLON }
   | integer as s { INTEGER (int_of_string s) }
   | "//"    { commentendl lexbuf}

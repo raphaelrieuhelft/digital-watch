@@ -1,6 +1,7 @@
 (* initial *)
 
 type instruction =
+  | PIvide
   | PIcbeq of int*int
   | PIj of string
   | PIli of int*int

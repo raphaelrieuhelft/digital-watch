@@ -28,7 +28,8 @@ prog:
 label:
     | l = LABEL ; COLON {l} ;
 ligne:
-    l = option(label) ; i = inst ; ENDL ; ENDL *  {(l, i, 0)} ; /* moyen pour ligne ? au pire on rénumérote après */
+    | l = label ; ENDL {(Some(l), PIvide, 0)}
+    | l = option(label) ; i = inst ; ENDL ; ENDL *  {(l, i, 0)} ; /* moyen pour ligne ? au pire on rénumérote après */
 
 inst:
     | CBEQ ; x = REG ; y = REG  { PIcbeq (x,y) }
