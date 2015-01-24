@@ -26,7 +26,7 @@ let rec prod_inst = function
     | Iincr (x,y) -> "1110" ^ (convrs x) ^(convrs y) ^ "00"
     | Imodf(x,y) -> "1100" ^ (convrs x) ^(convrs y) ^ "00"
     | Ilbi x -> "1000" ^ (cvs x 12)
-    | Ilin(x,y) -> "1010" ^ (convrs x) ^(cvs x 3) ^ "0000"
+    | Ilin(x,y) -> "1010" ^ (convrs x) ^(cvs y 3) ^ "0000"
     | Iso(x,y) -> "0000"  ^ (convrs x) ^ (cvs x 4) ^ "000"
     | Isd(x,y) ->"0010" ^ (convrs x) ^(cvs x 4) ^ "000"
 
