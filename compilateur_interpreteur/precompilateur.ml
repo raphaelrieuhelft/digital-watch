@@ -32,7 +32,7 @@ let make_labels p =
   (*let n = List.length p in*)
   List.fold_left (fun (i,smap) (so,_,pos) ->
     match so with
-	  | None -> (i, smap)
+	  | None -> (i+1, smap)
 	  | Some lab ->
 	    if Smap.mem lab smap then raise (LabelDejaExistant (lab,pos));
 		(i+1, Smap.add lab i smap)

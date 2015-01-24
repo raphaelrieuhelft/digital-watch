@@ -36,11 +36,11 @@ let coords  = function
 		|2 -> (edgeTime + 3*digit_width +2*space + 1*sepColon, edgeDown)
 		|1 -> (edgeTime + 4*digit_width +2*space + 2*sepColon, edgeDown)
 		|0 -> (edgeTime + 5*digit_width +3*space + 2*sepColon, edgeDown)
-		|11 -> (edgeDate, edgeDown+digit_height+sepDateTime)
-		|10->(edgeDate + 1*digit_width +space + 0*sepSlash, edgeDown+digit_height+sepDateTime)
+		|7 -> (edgeDate, edgeDown+digit_height+sepDateTime)
+		|6->(edgeDate + 1*digit_width +space + 0*sepSlash, edgeDown+digit_height+sepDateTime)
 		|9->(edgeDate + 2*digit_width +space + 1*sepSlash, edgeDown+digit_height+sepDateTime)
 		|8->(edgeDate + 3*digit_width +2*space + 1*sepSlash, edgeDown+digit_height+sepDateTime)
-		|7->(edgeDate + 4*digit_width +2*space + 2*sepSlash, edgeDown+digit_height+sepDateTime)
+		|11->(edgeDate + 4*digit_width +2*space + 2*sepSlash, edgeDown+digit_height+sepDateTime)
 		|_->(edgeDate + 5*digit_width +3*space + 2*sepSlash, edgeDown+digit_height+sepDateTime)
 		
 		(*returns the coordinates of digit i in the graphical window*)
@@ -102,7 +102,7 @@ let () =
   fill_rect 0 0 (size_x()) (size_y()); 
   display_colon ((fst (coords 5))+2*digit_width+space, snd(coords 5));
   display_colon ((fst (coords 3))+2*digit_width+space, snd(coords 3));
-  display_slash ((fst (coords 11))+2*digit_width+space, snd(coords
+  display_slash ((fst (coords 7))+2*digit_width+space, snd(coords
   11));
   display_slash ((fst (coords 9))+2*digit_width+space, snd(coords
   11))

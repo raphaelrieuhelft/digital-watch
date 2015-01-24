@@ -49,9 +49,9 @@ let traite t =
             | Ilbi (y)  -> regs.(31) <- y ; aux(i+1)
             | Ilin(x,y) -> regs.(x) <- nimm.(y) ; aux (i+1)
             | Iso(x,y) -> write_in_digitsRAM y (Array.of_list
-						  (bools_of_int x 7));
+						  (bools_of_int regs.(x) 7));
               aux (i+1)
-            | Isd(x,y) -> write_in_digitsRAM y dec7.(x); aux (i+1)
+            | Isd(x,y) -> write_in_digitsRAM y dec7.(regs.(x)); aux (i+1)
         end;
 
     in aux 0
