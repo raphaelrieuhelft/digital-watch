@@ -2,17 +2,17 @@
  
  let microprocessor_inputs = Array.make ninputs false
  let digitsRAM_count = 1 lsl digitsRAM_addr_size
- let digits_RAM = Array.make digits_RAM_count [||]
+ let digits_RAM = Array.make digitsRAM_count [||]
  
  let init () =
-	for i=0 to digits_RAM_count-1 do
-		digits_RAM.(i) <- Array.make digits_RAM_word_size false;
+	for i=0 to digitsRAM_count-1 do
+		digits_RAM.(i) <- Array.make digitsRAM_word_size false;
 	done
 	
 	
- let m_in = Mutex.create();
- let m_out = Mutex.create();
- let c = Condition.create();
+ let m_in = Mutex.create()
+ let m_out = Mutex.create()
+ let c = Condition.create()
  
  
  let get_inputs () = 

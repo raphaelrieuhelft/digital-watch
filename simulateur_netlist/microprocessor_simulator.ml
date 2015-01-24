@@ -1,3 +1,4 @@
+open Globals
 
 let print_scheduled = ref false
 
@@ -20,5 +21,5 @@ let start_simulation () =
 		| Scheduler.Combinational_cycle ->
 		  Format.eprintf "The netlist has a combinatory cycle.@.";
 	      exit 2
-		| Netlist.Parse_error s -> Format.eprintf "An error accurred: %s@." s; exit 2
+		| Netlist_analyser.Parse_error s -> Format.eprintf "An error accurred: %s@." s; exit 2
 		| exn -> raise exn
