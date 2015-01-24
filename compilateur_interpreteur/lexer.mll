@@ -74,26 +74,17 @@ let char = [' '-'!' '#'-'[' ']'-'\127'] | "\\" | "\"" | '\n' | '\t'
 let string = '"' char* '"'
 
 rule token = parse
-  | '\n'    { newline lexbuf; token lexbuf } (* il faut en tenir compte *)
+  | '\n'    { newline lexbuf; ENDL (*token lexbuf*) } (* il faut en tenir compte *)
   | space+  { token lexbuf }
   | ident as id { id_or_kwd id }
-  | '"'     { CHAINE (String.concat "" (chaine lexbuf) )}
-  | ','     { COMMA }
   | ':'     { COLON }
   | integer as s { INTEGER (int_of_string s) }
+  | "//"    { commentendl lexbuf}
   | eof     { EOF }
   | _ as c  { raise (Lexing_error ("illegal character: " ^ String.make 1 c)) }
 
-(* note : les commentaires ne sont pas imbriqués en C++ *)
-
-and chaine = parse
-  | "\\n"   { "\n"::(chaine lexbuf) }
-  | "\\t"   { "\t"::(chaine lexbuf) }
-  | "\\\""  { "\""::(chaine lexbuf) }
-  | "\092\092"  { "\092"::(chaine lexbuf) }
-  | '\092'    { (chaine lexbuf) }
-  | '"'     { [] }
-  | [' '-'\127'] as c { (String.make 1 c)::(chaine lexbuf) }
-  | eof     { raise (Lexing_error "End of file before a string is finished.") }
-  | _       { raise (Lexing_error "Invalid char inside a string.") }
+and commentendl = parse
+  | '\n' { newline lexbuf ; ENDL }
+  | _  {commentendl lexbuf}
+  | eof {EOF}
 

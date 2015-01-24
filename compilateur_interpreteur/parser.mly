@@ -2,63 +2,43 @@
 /* Analyseur syntaxique pour Mini-C++ */
 
 %{
-  open Ast
-  let rec transmet bp q = match q.v with
-    | Ident qi -> { v = (if bp then Po q else Ad q) ; loc = q.loc }
-    | Po qv -> let rqv = transmet bp qv in { v = (Po rqv) ; loc = q.loc } 
-    | Ad qv -> let rqv = transmet bp qv in { v = (Ad rqv) ; loc = q.loc }
-  let rec transmetq bp q = match q.v with
-    | Qvar qi -> { v = (if bp then Qpo q else Qad q) ; loc = q.loc }
-    | Qpo qv -> let rqv = transmetq bp qv in { v = (Qpo rqv) ; loc = q.loc } 
-    | Qad qv -> let rqv = transmetq bp qv in { v = (Qad rqv) ; loc = q.loc }
-
+  open Ast_precompilation
 %}
 
 %token <int> INTEGER
-%token <string> IDENT
-%token <string> TIDENT
+%token <int> REG
+%token <string> LABEL
 %token <string> CHAINE
-%token VOID TRUE FALSE NULL INT
-%token INCLUDEIOS EOF PUBLIC THIS CLASS VIRTUAL NEW
-%token COMMA SDEREF DOT IF  ELSE RETURN
-%token CHEVRON
-%token NOT INCR DECR ADDR 
-%token LACC RACC
-%token LPAR RPAR COLON SEMICOLON WHILE FOR
-%token TIMES DIV MODULO
-%token PLUS MINUS
-%token LT LE GT GE
-%token EQ NEQ
-%token AND
-%token OR
-%token ASSIGN
-%token STDCOUT
+%token ENDL
+%token CBEQ J LI INCR MODF LBI LIN SO SD CBEQI
+%token EOF
 
 
-/* Définitions des priorités et associativités des tokens */
-
-
-%right ASSIGN 
-%left OR
-%left AND
-%left EQ NEQ
-%left LT LE GT GE
-%left PLUS MINUS
-%left TIMES DIV MODULO
-%right NOT INCR DECR ADDR UNAIRE
-%left  SDEREF DOT LPAR
-
-
-%nonassoc IFX
-%nonassoc ELSE
 
 /* Point d'entrée de la grammaire */
-%start <Ast.fichier>fichier
+%start <Ast_precompilation.programme>prog
 
 /* Type des valeurs retournées par l'analyseur syntaxique */
 
 %%
 
+prog:
+    | ENDL * ; x = ligne * { x } ;
+
+ligne:
+    l = option(LABEL) ; i = inst ; ENDL ; ENDL *  {(l, i, 0)} ; /* moyen pour ligne ? au pire on rénumérote après */
+
+inst:
+    | CBEQ ; x = REG ; y = REG  { PIcbeq (x,y) }
+    | J ; s = LABEL { PIj s }
+    | LI ; x = REG ; y = INTEGER {PIli (x,y) }
+    | 
+    |
+    |
+    |
+
+
+/*
 fichier:
 | x = position(dfichier) { x }
 ;
@@ -276,3 +256,4 @@ dbloc:
 ;
 
 
+*/
