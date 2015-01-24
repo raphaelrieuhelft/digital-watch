@@ -4,7 +4,7 @@ open Ast
 exception LabelDejaExistant of (string*int)
 exception LabelInexistant of (string*int)
 
-module Smap = Map.Make(String) end
+module Smap = Map.Make(String)
 
 let reg_at = 1 (*?*)
 
@@ -45,6 +45,7 @@ let handle_labels labels = List.map (fun (_,instr,pos) ->
 )
 
 let main p =
-  let p = handle_cbeqi p in
-  let labels = make_labels p in
-  handle_labels labels p
+  let p_num = numerote_lignes 0 p in
+  let p2 = handle_cbeqi p_num in
+  let labels = make_labels p2 in
+  handle_labels labels p2

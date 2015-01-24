@@ -70,7 +70,10 @@ let () =
        	(* On s'arrête ici si on ne veut faire que le parsing *)
    	if !parse_only then 
 		exit 0
-    else exit 0 ;(*let tarbre = Typing.typfichier p in*)
+    else 
+        let p2 = Precompilateur.main p in
+        print_string (Production_code.prod_prog p2) ;
+        exit 0 ;(*let tarbre = Typing.typfichier p in*)
 				(*Compilateur.compile_fichier tarbre !ofile ;
 				(*print_string "OK.\n";*)
 				exit 0;
