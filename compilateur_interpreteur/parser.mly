@@ -31,8 +31,13 @@ ligne:
     | l = label ; ENDL {(Some(l), PIvide, 0)}
     | l = option(label) ; i = inst ; ENDL ; ENDL *  {(l, i, 0)} ; /* moyen pour ligne ? au pire on rénumérote après */
 
+int_ou_reg:
+    | x = REG {x}
+    | x = INTEGER {x} ;
+
 inst:
-    | CBEQ ; x = REG ; y = REG  { PIcbeq (x,y) }
+    /*| CBEQ ; x = REG ; y = REG  { PIcbeq (x,y) } */
+    | CBEQ ; x = REG ; y = int_ou_reg  { PIcbeq (x,y) }
     | J ; s = LABEL { PIj s }
     | LI ; x = REG ; y = INTEGER {PIli (x,y) }
     | INCR ; x = REG ; y = REG {PIincr(x,y) }

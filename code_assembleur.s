@@ -88,7 +88,7 @@ incrtics:
 		//gestion dizaines années
 		incr $an1 $an1
 		cbeqi $an1 10
-		j print an1debut
+		j printan1debut
 		li $an1 0
 		li $an 0
 		sd $an1 11
@@ -334,7 +334,7 @@ incrannees:
 		sd $an0 10
 		incr $an1 $an1
 		cbeqi $an1 10
-		j print an1debut
+		j printan1debut
 		li $an1 0
 		li $an 0
 		sd $an1 11

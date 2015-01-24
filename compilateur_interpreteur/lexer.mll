@@ -53,13 +53,16 @@ let reg_tbl =
     "$in2", 34 ;
     "$in3", 35 ;
     "$in4", 36 ;
-    "$in5", 37
+    "$in5", 37 ;
+    "$an", 38 ;
+    "$an0", 39 ;
+    "$an1", 40
       ]
 
   let id_or_kwd = 
     let h = Hashtbl.create 100 in
     List.iter (fun (s,t) -> Hashtbl.add h s t) kwd_tbl;
-    let hreg = Hashtbl.create 40 in
+    let hreg = Hashtbl.create 80 in
     List.iter (fun (s,t) -> Hashtbl.add hreg s t) reg_tbl ;
     fun s -> 
       try Hashtbl.find h s with _ -> (try REG (Hashtbl.find hreg s)  with _ -> ( LABEL s(*raise (Lexing_error "Identifiant inconnu")*)))
