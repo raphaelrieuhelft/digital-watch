@@ -82,14 +82,14 @@ incrtics:
 		incr $yr $yr
 		incr $yr0 $yr0
 		cbeqi $yr0 10
-		j printan0debut
+		j printyr0debut
 		li $yr0 0
 		sd $yr0 10
 		
 		//gestion dizaines années
 		incr $yr1 $yr1
 		cbeqi $yr1 10
-		j printan1debut
+		j printyr1debut
 		li $yr1 0
 		li $yr 0
 		sd $yr1 11
@@ -166,6 +166,13 @@ set31:	li $nda 31
 set30:	li $nda 30
 		j debut
 		
+printyr0debut:
+		sd $yr0 10
+		j debut
+		
+printyr1debut:
+		sd $yr1 11
+		j debut
 		
 /////////////
 
@@ -330,12 +337,12 @@ incrannees:
 		incr $yr $yr
 		incr $yr0 $yr0
 		cbeqi $yr0 10
-		j printan0debut
+		j printyr0debut
 		li $yr0 0
 		sd $yr0 10
 		incr $yr1 $yr1
 		cbeqi $yr1 10
-		j printan1debut
+		j printyr1debut
 		li $yr1 0
 		li $yr 0
 		sd $yr1 11
