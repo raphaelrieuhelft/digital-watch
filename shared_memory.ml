@@ -1,27 +1,32 @@
- let microprocessor_inputs = Array.make Names.ninputs false
+ open Globals
  
- let m_in = Mutex.create();
- let m_out = Mutex.create();
- let c = Condition.create();
+ let microprocessor_inputs = Array.make ninputs false
+ let digitsRAM_count = 1 lsl digitsRAM_addr_size
+ let digits_RAM = Array.make digitsRAM_count [||]
  
- let read_inputs (f: unit->unit) = 
+ let init () =
+	for i=0 to digitsRAM_count-1 do
+		digits_RAM.(i) <- Array.make digitsRAM_word_size false;
+	done
+	
+	
+ let m_in = Mutex.create()
+ let m_out = Mutex.create()
+ let c = Condition.create()
+ 
+ 
+ let get_inputs () = 
 	Mutex.lock m_in;
-	f();
+	let inputs = Array.copy microprocessor_inputs in
 	Mutex.unlock m_in;
+	inputs
  
- let change_output (f: unit ->unit) =
+ let write_in_digitsRAM addr data =
 	Mutex.lock m_out;
-	f();
+	digits_RAM.(addr) <- data;
 	Condition.signal c;
 	Mutex.unlock m_out
  
  
  
- let digits_RAM_count = 16
- let digits_RAM_word_size = 7
- let digits_RAM = Array.make digits_RAM_count [||]
- 
- let init () =
-	for i=0 to digits_RAM_count-1 do
-		digits_RAM.(i) <- Array.make digits_RAM_word_size false;
-	done
+
