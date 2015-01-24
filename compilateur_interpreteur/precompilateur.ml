@@ -20,18 +20,18 @@ let rec handle_cbeqi = function
   | hd::tl -> hd::(handle_cbeqi tl)
 
 let make_labels p =
-  let n = List.length p in
+  (*let n = List.length p in*)
   List.fold_left (fun (i,smap) (so,_,pos) ->
     match so with
-	  | None -> smap
+	  | None -> (i, smap)
 	  | Some lab ->
 	    if Smap.mem lab smap then raise (LabelDejaExistant (lab,pos));
-		Smap.add lab i smap
+		(i+1, Smap.add lab i smap)
   ) (0, Smap.empty) p
   
 let handle_labels labels = List.map (fun (_,instr,pos) ->
   match instr with
-    | PIvide -> Ivide
+    | PIvide -> (Ast.Ivide, pos)
     | PIj lab -> begin try (Ij (Smap.find lab labels), pos)
 	  with Not_found -> raise (LabelInexistant (lab,pos)) end
 	| PIcbeq(a,b) -> (Icbeq(a,b), pos)
@@ -42,10 +42,11 @@ let handle_labels labels = List.map (fun (_,instr,pos) ->
     | PIlin(a,b) -> (Ilin(a,b), pos)
     | PIso(a,b) -> (Iso(a,b), pos)
     | PIsd(a,b) -> (Isd(a,b), pos)
+	| PIcbeqi(a,b) -> failwith "Cela doit déjà être retiré (PIcbeqi) "
 )
 
 let main p =
   let p_num = numerote_lignes 0 p in
   let p2 = handle_cbeqi p_num in
-  let labels = make_labels p2 in
+  let i, labels = make_labels p2 in
   handle_labels labels p2

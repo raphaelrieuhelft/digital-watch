@@ -1,3 +1,5 @@
+open Ast
+
 let rec convertit n lim = match lim with
     | 0 -> if n > 0 then failwith "Dépassement taille, n est trop grand"
             else []
@@ -25,4 +27,4 @@ let rec prod_inst = function
     | Isd(x,y) ->"0010" ^ (convrs x) ^(cvs x 4) ^ "000"
 
 
-let prod_prog = String.concat "" (List.map (fun (x,y) -> prod_inst x))
+let prod_prog  p = String.concat "" (List.map (fun (x,y) -> prod_inst x) p)
