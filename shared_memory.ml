@@ -4,7 +4,7 @@
  let digitsRAM_count = 1 lsl digitsRAM_addr_size
  let digits_RAM = Array.make digitsRAM_count [||]
  
- let init () =
+ let () =
 	for i=0 to digitsRAM_count-1 do
 		digits_RAM.(i) <- Array.make digitsRAM_word_size false;
 	done
@@ -24,9 +24,8 @@
  let write_in_digitsRAM addr data =
 	Mutex.lock m_out;
 	digits_RAM.(addr) <- data;
-	Condition.signal c;
-	Mutex.unlock m_out
- 
+	Mutex.unlock m_out;
+	Condition.signal c 
  
  
 

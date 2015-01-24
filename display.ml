@@ -44,34 +44,9 @@ let coords  = function
 		|_->(edgeDate + 5*digit_width +3*space + 2*sepSlash, edgeDown+digit_height+sepDateTime)
 		
 		(*returns the coordinates of digit i in the graphical window*)
-(*
-let update () =
-	let digits = Array.make nb_digits [||];
-	let change = Array.make nb_digits false;
-	for i = 0 to nb_digits-1 do
-		digits.(i)<-Array.make 7 false
-	done;
-	while true do
-		Condition.wait Shared_memory.c Shared_memory.m_out;
-		for i = 0 to nb_digits-1 do
-			let digit = Array.copy Shared_memory.digits_RAM in
-			if digits.(i) = digit then () 
-			else begin
-				digits.(i)<-digit;
-				change.(i)<-true;
-			end
-		done;
-		Mutex.unlock Shared_memory.m_out;
-		for i = 0 to nb_digits-1 do
-			if change.(i) then begin
-				change.(i)<-false;
-				display_digit (coords i) digits.(i)
-				end
-		done
-	done
-*)		
 
-
+    
+	  
 let display_digit (x,y) (*bottom left coordinates*) (segments :  bool array) =
 	set_color background;
 	fill_rect x y digit_width digit_height;
@@ -94,6 +69,33 @@ let display_slash (x,y) =
   set_color foreground;
   fill_poly [|(x+2,y); (x+4, y); (x+sepSlash-2, y+digit_height); (x+sepSlash-4, y+digit_height)|]
 
+
+let update () =
+  let digits = Array.make nb_digits [||] in
+  let change = Array.make nb_digits false in
+  for i = 0 to nb_digits-1 do
+    digits.(i)<-Array.make 7 false
+  done;
+  while true do
+    Condition.wait Shared_memory.c Shared_memory.m_out;
+    for i = 0 to nb_digits-1 do
+      let digit = Array.copy Shared_memory.digits_RAM.(i) in
+      if digits.(i) = digit then () 
+      else begin
+	digits.(i)<-digit;
+	change.(i)<-true;
+      end
+    done;
+    Mutex.unlock Shared_memory.m_out;
+    for i = 0 to nb_digits-1 do
+      if change.(i) then 
+	begin
+	  change.(i)<-false;
+		display_digit (coords i) digits.(i)
+	end
+    done
+  done
+
 let () = 
   open_graph "";
   set_color background;
@@ -103,18 +105,5 @@ let () =
   display_slash ((fst (coords 11))+2*digit_width+space, snd(coords
   11));
   display_slash ((fst (coords 9))+2*digit_width+space, snd(coords
-  11));
-  display_digit (coords 5) [|true;true; true; true; true; true;false|];
-  display_digit (coords 4) [|true;true; true; true; true; true;false|];
-  display_digit (coords 3) [|true;true; true; true; true; true;false|];
-  display_digit (coords 2) [|true;true; true; true; true; true;false|];
-  display_digit (coords 1) [|false;true; true;false; false; true;true|];
-  display_digit (coords 0) [|true;true; false; true; true; false;true|];
-  display_digit (coords 11) [|true;true; true; true; true; true;false|];
-  display_digit (coords 10) [|true;true; true; true; true; true;false|];
-  display_digit (coords 9) [|true;true; true; true; true; true;false|];
-  display_digit (coords 8) [|true;true; true; true; true; true;false|];
-  display_digit (coords 7) [|false;true; true;false; false; true;true|];
-  display_digit (coords 6) [|true;true; false; true; true; false;true|];
-  while true do Unix.sleep 50 done
+  11))
 

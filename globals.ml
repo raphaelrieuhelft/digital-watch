@@ -14,7 +14,7 @@ for i=0 to ninputs-1 do
 	input.(i) = "in"^(string_of_int i);
 done;
 *)
-
+let code_assembleur = "code_assembleur.s"
 let programROM = "program"
 let programROM_filename = "bin/program.bin"
 let programROM_addr_size = 9

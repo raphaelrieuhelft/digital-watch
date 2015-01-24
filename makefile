@@ -1,6 +1,7 @@
 OCAMLBUILD=ocamlbuild -classic-display \
 	-tags annot,debug,thread \
 	-libs unix \
+	-libs graphics \
 	-I compilateur_interpreteur \
 	-I simulateur_netlist \
 		-I simulateur_netlist/netlist_analyser \
