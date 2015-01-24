@@ -27,4 +27,4 @@ let rec prod_inst = function
     | Isd(x,y) ->"0010" ^ (convrs x) ^(cvs x 4) ^ "000"
 
 
-let prod_prog  p = String.concat "" (List.map (fun (x,y) -> prod_inst x) p)
+let prod_prog  p = String.concat "\n" (List.map (fun (x,y) -> prod_inst x) p)
