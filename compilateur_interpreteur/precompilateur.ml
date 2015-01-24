@@ -56,8 +56,8 @@ let handle_labels labels = List.map (fun (_,instr,pos) ->
 
 let main p =
 try
-  let p_num = numerote_lignes 1 p in
-  let p2 = handle_cbeqi_and_empty p_num in
+  (*let p_num = numerote_lignes 1 p in*)
+  let p2 = handle_cbeqi_and_empty p in
   let i, labels = make_labels p2 in
   handle_labels labels p2
 with

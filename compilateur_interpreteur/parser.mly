@@ -3,6 +3,7 @@
 
 %{
   open Ast_precompilation
+  open Lexing
 %}
 
 %token <int> INTEGER
@@ -28,8 +29,8 @@ prog:
 label:
     | l = LABEL ; COLON {l} ;
 ligne:
-    | l = label ; ENDL {(Some(l), PIvide, 0)}
-    | l = option(label) ; i = inst ; ENDL ; ENDL *  {(l, i, 0)} ; /* moyen pour ligne ? au pire on rénumérote après */
+    | l = label ; ENDL {(Some(l), PIvide, $startpos.pos_lnum)}
+    | l = option(label) ; i = inst ; ENDL ; ENDL *  {(l, i, $startpos.pos_lnum)} ;
 
 int_ou_reg:
     | x = REG {x}
