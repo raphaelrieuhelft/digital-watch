@@ -9,3 +9,5 @@
 *.cmxa
 *#
 .*.swp
+_build/
+*.native
