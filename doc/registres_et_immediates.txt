@@ -1,4 +1,4 @@
-
+﻿
 
 Registres :
 
@@ -21,14 +21,15 @@ Registres :
 16 = $yr1
 17 = $yr
 18 = $nda
-19-25 = $t0-$t6
-26-29 = $s0-$s3
+19-24 = $in0-$in5
+25-27 = $t0-$t2
+28-29 = $s0-$s1
 30 = $cr
 31 = $k0
 
 
-$t0-$t6 : temporaires non-sauvegardés
-$s0-$s3 : temporaires sauvegardés à travers les appels
+$t0-$t2 : temporaires non-sauvegardés
+$s0-$s1 : temporaires sauvegardés à travers les appels
 
 $qt : tics quartz
 $sc0 : unités secondes
