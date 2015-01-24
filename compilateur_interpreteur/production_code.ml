@@ -1,16 +1,20 @@
 open Ast
 
+exception Depassement of string * int
+exception LDepassement of string * int * int
+
 let rec convertit n lim = match lim with
-    | 0 -> if n > 0 then failwith "Dépassement taille, n est trop grand"
+    | 0 -> if n > 0 then raise (Depassement ("Dépassement taille, n est trop grand",n))
             else []
     | lim -> (n mod 2)::(convertit (n/2) (lim -1))
 
+let convertit2 n lim = try convertit n lim with Depassement (s, i) -> raise (Depassement (s,n))
 
 let conv_s l =
     String.concat "" (List.map string_of_int l)
 
 
-let cvs n lim =  conv_s (convertit n lim)
+let cvs n lim =  conv_s (convertit2 n lim)
 
 let convrs n = cvs n 5
 
@@ -27,4 +31,4 @@ let rec prod_inst = function
     | Isd(x,y) ->"0010" ^ (convrs x) ^(cvs x 4) ^ "000"
 
 
-let prod_prog  p = (*String.concat "\n" *)(List.map (fun (x,y) -> prod_inst x) p)
+let prod_prog  p = (*String.concat "\n" *)(List.map (fun (x,y) -> try prod_inst x with Depassement (s,i) -> raise (LDepassement (s^"\nA la ligne : "^string_of_int(y),i, y))) p)
