@@ -68,6 +68,6 @@ with
     Format.eprintf "Ligne %d : label \"%s\" inconnu.@." pos lab;
 	exit 2
   | ConflitLabels(pos) -> 
-    Format.eprintf "Ligne %d : deux labels sont définis successivement à cause d'une instruction vide ; on ne sait pas retenir les deux@." pos lab;
+    Format.eprintf "Ligne %d : deux labels sont définis successivement à cause d'une instruction vide ; on ne sait pas retenir les deux@." pos;
 	exit 2
   
