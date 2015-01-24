@@ -1,15 +1,22 @@
 open Ast
 
 let cree_tableau_inst a =
-    Array.of_list (List.map fst programme)
+    Array.of_list (List.map fst a)
 
 
 let regs = Array.make 32 0
 
-let inv_tbl = Array.map (fun (s,t) -> t) Lexer.reg_tbl
+let inv_tbl = Array.of_list (List.map (fun (s,t) -> s) Lexer.reg_tbl)
 
-let affiche regs = Array.iter (fun x -> print_string (inv_tbl.(i) ^" = ") ; print_int x ; print string ", ") regs ; print_newline ()
-let afficher reste = Array.iter (fun x -> print_int x ; print string ", ") reste
+let affiche regs = let n= Array.length regs in
+    for i =0 to n do
+        print_string (inv_tbl.(i) ^" = ") ; print_int regs.(i) ; 
+        if i < n-1 then print_string ", " ;
+
+    done;
+    print_newline ()
+
+let afficher reste = Array.iter (fun x -> print_int x ; print_string ", ") reste
 
 let nimm = Array.make 8 1
 
@@ -20,19 +27,19 @@ let traite t =
     let rec aux i =
         affiche regs ;
         afficher nimm ;
-        affichier ramaff ;
+        afficher ramaff ;
         print_newline() ;
         if i < n then begin match t.(i) with
             | Ivide -> aux (i+1)
             | Icbeq(x,y) -> if regs.(x) = regs.(y) then aux (i+2) else aux(i+1)
-            | Ij x -> aux t.(x)
-            | Ili (x,y) -> t.(x) <- y ; aux (i+1)
-            | Iincr (x,y) -> t.(x) <- t.(y) + 1 ; aux(i+1)
-            | Imodf (x,y) -> t.(x) <- t.(y) mod 4 ; aux(i+1)
-            | Ilbi (y)  -> t.(31) <- y ; aux(i+1)
-            | Ilin(x,y) -> t.(x) <- nimm.(y)
-            | Iso(x,y) -> ramaff.(y) <- t.(x)
-            | Isd(x,y) -> ramaff.(y) <- t.(x)
+            | Ij x -> aux regs.(x)
+            | Ili (x,y) -> regs.(x) <- y ; aux (i+1)
+            | Iincr (x,y) -> regs.(x) <- regs.(y) + 1 ; aux(i+1)
+            | Imodf (x,y) -> regs.(x) <- regs.(y) mod 4 ; aux(i+1)
+            | Ilbi (y)  -> regs.(31) <- y ; aux(i+1)
+            | Ilin(x,y) -> regs.(x) <- nimm.(y)
+            | Iso(x,y) -> ramaff.(y) <- regs.(x)
+            | Isd(x,y) -> ramaff.(y) <- regs.(x)
         end;
 
     in aux 0

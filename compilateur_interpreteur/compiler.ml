@@ -5,7 +5,7 @@ open Format
 open Lexing
 (* Option de compilation, pour s'arrêter à l'issue du parser *)
 let parse_only = ref false
-let type_only = ref false
+let interp_only = ref false
 
 (* Noms des fichiers source et cible *)
 let ifile = ref ""
@@ -17,8 +17,8 @@ let set_file f s = f := s
 let options = 
   ["--parse-only", Arg.Set parse_only, 
    "  Pour ne faire uniquement que la phase d'analyse syntaxique" ; 
-   "--type-only", Arg.Set type_only ,
-   "  Pour ne faire que les phases d'analyse syntaxique et de typage" ;
+   "--interp", Arg.Set interp_only ,
+   "  Pour interpréter au lieu de compiler" ;
    "-o", Arg.String (set_file ofile), 
    "<file>  Pour indiquer le mom du fichier de sortie"]
 
@@ -72,8 +72,14 @@ let () =
 		exit 0
     else 
         let p2 = Precompilateur.main p in
-        List.iter (fun s -> if s <> "" then print_string (s ^"\n");) (Production_code.prod_prog p2) ;
-        exit 0 ;(*let tarbre = Typing.typfichier p in*)
+        if !interp_only then begin
+            Interpreteur.traite (Interpreteur.cree_tableau_inst p2) ;
+            exit 0
+        end
+        else begin
+            List.iter (fun s -> if s <> "" then print_string (s ^"\n");) (Production_code.prod_prog p2) ;
+            exit 0 
+        end;(*let tarbre = Typing.typfichier p in*)
 				(*Compilateur.compile_fichier tarbre !ofile ;
 				(*print_string "OK.\n";*)
 				exit 0;

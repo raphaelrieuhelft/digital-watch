@@ -1,1 +1,1 @@
-ocamlbuild -use-menhir main_compilo.native
+ocamlbuild -use-menhir compiler.native
