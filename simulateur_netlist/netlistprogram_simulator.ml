@@ -1,3 +1,6 @@
+(* simulate a netlist_ast.program which should be already scheduled *)
+
+open Globals
 open Netlist_ast
 open Netlist_utilities
 
@@ -43,6 +46,7 @@ let eval_exp env id = function
 	let rom = Hashtbl.find rom_tbl id in
 	VBitArray (rom.(addr))
   | Eram (_,_,ra_arg,we_arg,wa_arg,arg) ->
+	if id=digitsRAM then VBitArray(Array.make digitsRAM_word_size false) else (*value read in digitsRAM is unused in netlist*)
     let ram = Hashtbl.find ram_tbl id in
     let ra_t = eval_arg_to_array env ra_arg in
     let r_addr = bits_to_int ra_t in
@@ -79,22 +83,29 @@ let write_eq env (id,exp) = try match exp with
 	if we then
 	  let wa_t = eval_arg_to_array env wa_arg in
 	  let w_addr = bits_to_int wa_t in
-	  let ram = Hashtbl.find ram_tbl id in
-	  ram.(w_addr) <- eval_arg_to_array env arg
+	  let data = eval_arg_to_array env arg in
+	  if id=digitsRAM then Shared_memory.write_in_digitsRAM w_addr data
+	  else
+		let ram = Hashtbl.find ram_tbl id in
+		ram.(w_addr) <- data
   | Earg _ | Enot _ | Ebinop _ | Emux _ | Erom _ | Econcat _ | Eslice _ | Eselect _
     -> ()
   with exn ->
     Format.eprintf "Error in write_eq with eq:  %!";
     Netlist_printer.print_eq Format.err_formatter (id,exp);
     raise exn
-	
+
+let read_input inputs id =
+	let i = input_string_to_int id in
+	VBit inputs.(i)
 	
 let print_output id v =
   Format.printf "  output %s : %s@." id (value_to_string v)
 	
-let cycle curr_cycle p read_input print_output env =	
+let cycle curr_cycle p print_output env =	
   Format.printf "Cycle %d@." curr_cycle;
-  let env = List.fold_left (fun env id -> Env.add id (read_input id) env) env p.p_inputs in
+  let inputs = Shared_memory.get_inputs () in
+  let env = List.fold_left (fun env id -> Env.add id (read_input inputs id) env) env p.p_inputs in
   let env = List.fold_left (compute_eq p.p_vars) env p.p_eqs in
   List.iter (write_eq env) p.p_eqs; 
   List.iter (fun id -> print_output id (Env.find id env)) p.p_outputs;
@@ -107,15 +118,12 @@ let cycle curr_cycle p read_input print_output env =
 
 	
 	
-let main p number_steps =
-  if !Read_value.random then Random.self_init ();
+let simulate p =
   Init_memory.main reg_tbl rom_tbl ram_tbl p.p_eqs;
   let env = Env.empty in
   let rec cycles curr_cycle env =
-    if curr_cycle=number_steps then () 
-    else
-      let env = cycle curr_cycle p (Read_value.read_entry p.p_vars) print_output env in
-      cycles (curr_cycle+1) env
+	let env = cycle curr_cycle p print_output env in
+    cycles (curr_cycle+1) env
   in
   cycles 0 env
 

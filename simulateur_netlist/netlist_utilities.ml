@@ -46,7 +46,16 @@ let value_to_string = function
 
 
   
-
+let int_to_binary_string size n =
+  let s = String.make size '0' in
+  let rec aux i m =
+    if i<0 then () else
+    begin
+    if m mod 2 = 1 then s.[i] <- '1';
+    aux (i-1) (m/2)
+    end
+  in aux (size-1) n;
+  s
 
 
 
