@@ -3,6 +3,7 @@ open Ast
 
 exception LabelDejaExistant of (string*int)
 exception LabelInexistant of (string*int)
+exception ConflitLabels of int
 
 module Smap = Map.Make(String)
 
@@ -12,12 +13,20 @@ let reg_at = 1 (*?*)
 let rec numerote_lignes pos = function
   | [] -> []
   | (so, inst, _)::l -> (so, inst, pos)::(numerote_lignes (pos+1) l)
+  
+let max_string_options pos = function
+  | None, so -> so
+  | so, None -> so
+  | _ -> raise (ConflitLabels pos)
 
-let rec handle_cbeqi = function
+let rec handle_cbeqi_and_empty = function
   | [] -> []
   | (so, PIcbeqi(rs,imm), pos)::tl ->
-    (so, PIli(reg_at,imm), pos)::(None, PIcbeq(rs,reg_at), pos)::(handle_cbeqi tl)
-  | hd::tl -> hd::(handle_cbeqi tl)
+    (so, PIli(reg_at,imm), pos)::(None, PIcbeq(rs,reg_at), pos)::(handle_cbeqi_and_empty tl)
+  | (so1, PIvide, pos1)::(so2, pi, pos2)::tl ->
+    let so = max_string_options pos1 (so1,so2) in
+	handle_cbeqi_and_empty ((so, pi, pos2)::tl)
+  | hd::tl -> hd::(handle_cbeqi_and_empty tl)
 
 let make_labels p =
   (*let n = List.length p in*)
@@ -46,7 +55,19 @@ let handle_labels labels = List.map (fun (_,instr,pos) ->
 )
 
 let main p =
+try
   let p_num = numerote_lignes 1 p in
-  let p2 = handle_cbeqi p_num in
+  let p2 = handle_cbeqi_and_empty p_num in
   let i, labels = make_labels p2 in
   handle_labels labels p2
+with
+  | LabelDejaExistant(lab,pos) -> 
+    Format.eprintf "Ligne %d : définition d'un label \"%s\" déjà existant.@." pos lab;
+	exit 2
+  | LabelInexistant(lab,pos) -> 
+    Format.eprintf "Ligne %d : label \"%s\" inconnu.@." pos lab;
+	exit 2
+  | ConflitLabels(pos) -> 
+    Format.eprintf "Ligne %d : deux labels sont définis successivement à cause d'une instruction vide ; on ne sait pas retenir les deux@." pos;
+	exit 2
+  
