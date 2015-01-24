@@ -1,9 +1,0 @@
-INPUT 
-OUTPUT o
-VAR
-  a, b, c, o
-IN
-b = REG a
-c = REG b
-a = REG c
-o = a

@@ -1,3 +1,6 @@
+(* fichier main du simulateur rendu pour la partie 1. à modifier *)
+
+
 let print_only = ref false
 let number_steps = ref (-1)
 

@@ -1,9 +1,0 @@
-INPUT 
-OUTPUT o
-VAR
-  a, b, c, o
-IN
-b = a
-c = b
-a = c
-o = a
