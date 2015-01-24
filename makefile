@@ -1,4 +1,11 @@
-OCAMLBUILD=ocamlbuild -I src -I src_unmodified
+OCAMLBUILD=ocamlbuild -classic-display \
+	-tags annot,debug,thread \
+	-libs unix \
+	-I compilateur_interpreteur \
+	-I simulateur_netlist \
+		-I simulateur_netlist/netlist_analyser \
+		-I simulateur_netlist/scheduling \
+	-use-menhir
 TARGET=byte
 
 

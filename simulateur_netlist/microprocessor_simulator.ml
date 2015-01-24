@@ -4,7 +4,7 @@ let print_scheduled = ref false
 let start_simulation () =
 	try
 		let filename = microprocessor_filename in
-		let p = Netlist.read_file filename in
+		let p = Netlist_analyser.read_file filename in
 		let p = Scheduler.schedule p in
 		if !print_scheduled then
 			begin
