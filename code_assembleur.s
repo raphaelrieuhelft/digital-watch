@@ -1,6 +1,7 @@
 		j initialisation
 
-debut:	lin $t0 1		//entée 1 : marche/pause
+debut:	
+		lin $t0 1		//entée 1 : marche/pause
 		cbeqi $t0 0
 		j marche
 		j pause
@@ -212,7 +213,7 @@ reset:	li $qt 0
 		
 /////////////
 
-		//pause : réglage possible
+pause:// réglage possible
 		so $cr 12		//pause : affichage du réglage courant
 		
 		lin $t0 2		//entée 2 : changer réglage courant
@@ -358,9 +359,3 @@ changevitesse:
 		lbi 1
 		li $qt 0
 		j debut
-		
-		
-		
-		
-		
-		

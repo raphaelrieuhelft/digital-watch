@@ -92,7 +92,8 @@ let () =
 	localisation (Lexing.lexeme_start_p buf);
 	eprintf "Erreur dans l'analyse syntaxique@.";
 	exit 1
-    | Failure s ->
+    | Precompilateur.LabelInexistant (x,y) -> print_string( "Label inexistant : "^x^"\nligne : "^string_of_int(y))
+  (*  | Failure s ->
 	localisation (Lexing.lexeme_start_p buf);
         eprintf "Erreur du compilateur : message :  %s" s;
 	exit 2;
@@ -104,4 +105,4 @@ let () =
 
 
 
-
+*)
