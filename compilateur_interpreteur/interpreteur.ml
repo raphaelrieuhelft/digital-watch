@@ -3,7 +3,7 @@ open Globals
 open Shared_memory
 
 let cree_tableau_inst a =
-    Array.of_list (List.map fst a)
+    Array.of_list a
 
 
 let regs = Array.make 32 0
@@ -33,14 +33,14 @@ let traite t =
     let n = Array.length t in
    
     let rec aux i =
-      Format.eprintf "%d@." i;
+      Format.eprintf "Ligne dans le code : %d. Numéro d'instruction : %d.@." (snd t.(i)) i;
       ignore(read_line());
       affiche regs ;
       afficher nimm ;
       print_newline();
         (*afficher ramaff ;
         print_newline() ;*)
-        if i < n then begin match t.(i) with
+        if i < n then begin match fst t.(i) with
             | Ivide -> aux (i+1)
             | Icbeq(x,y) -> if regs.(x) = regs.(y) then aux (i+2) else aux(i+1)
             | Ij x -> aux x
