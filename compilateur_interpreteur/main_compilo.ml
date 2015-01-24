@@ -72,7 +72,7 @@ let () =
 		exit 0
     else 
         let p2 = Precompilateur.main p in
-        List.iter (fun s -> print_string (s ^"\n")) (Production_code.prod_prog p2) ;
+        List.iter (fun s -> if s <> "" then print_string (s ^"\n");) (Production_code.prod_prog p2) ;
         exit 0 ;(*let tarbre = Typing.typfichier p in*)
 				(*Compilateur.compile_fichier tarbre !ofile ;
 				(*print_string "OK.\n";*)
