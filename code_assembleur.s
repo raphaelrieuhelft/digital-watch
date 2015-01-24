@@ -78,20 +78,20 @@ incrtics:
 		sd $mo1 9
 		
 		//gestion unités années
-		incr $an $an
-		incr $an0 $an0
-		cbeqi $an0 10
+		incr $yr $yr
+		incr $yr0 $yr0
+		cbeqi $yr0 10
 		j printan0debut
-		li $an0 0
-		sd $an0 10
+		li $yr0 0
+		sd $yr0 10
 		
 		//gestion dizaines années
-		incr $an1 $an1
-		cbeqi $an1 10
+		incr $yr1 $yr1
+		cbeqi $yr1 10
 		j printan1debut
-		li $an1 0
-		li $an 0
-		sd $an1 11
+		li $yr1 0
+		li $yr 0
+		sd $yr1 11
 		
 		j debut
 		
@@ -156,7 +156,7 @@ pasaout:
 		j set30
 fevrier:
 		li $nda 28
-		modf $an $t0
+		modf $yr $t0
 		cbeq $t0 $zero //année bissextile?
 		li $nda 29
 		j debut
@@ -326,18 +326,18 @@ incrmois:
 		j debut
 		
 incrannees:
-		incr $an $an
-		incr $an0 $an0
-		cbeqi $an0 10
+		incr $yr $yr
+		incr $yr0 $yr0
+		cbeqi $yr0 10
 		j printan0debut
-		li $an0 0
-		sd $an0 10
-		incr $an1 $an1
-		cbeqi $an1 10
+		li $yr0 0
+		sd $yr0 10
+		incr $yr1 $yr1
+		cbeqi $yr1 10
 		j printan1debut
-		li $an1 0
-		li $an 0
-		sd $an1 11
+		li $yr1 0
+		li $yr 0
+		sd $yr1 11
 		cbeqi $mo 2
 		j debut
 //Si on incrémente l'année en mode réglage et qu'on est en février, il faut mettre à jour le nombre de jours du mois courant. Si on était un 29 février, on devient le 28.
