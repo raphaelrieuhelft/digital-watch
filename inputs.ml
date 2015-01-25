@@ -1,21 +1,9 @@
 open Graphics
 open Shared_memory
+open Input_helpers
 
-let wait () = Thread.delay 0.05
-
-let force_pause () = set_input 1 false
-let force_marche () = set_input 1 true
-
-let reset () =
-	force_pause ();
-	wait ();
-	switch_input 4;
-	wait ()
-	
-let change_reglage_courant () = switch_input 2; wait ()
-let incremente_reglage_courant () = switch_input 3; wait ()
-
-
+let temps_synchro = 60.0
+let tstart = 0.0
 
 let on_input c = match c with
   |'\r' -> force_marche ()
@@ -24,6 +12,7 @@ let on_input c = match c with
   |' ' -> incremente_reglage_courant ()
   |'\b'-> reset ()
   |'s' -> switch_input 5
+  |'t' -> Synchro.boucle_s tstart temps_synchro false
   |_->()
 
 let handle_inputs ()=
