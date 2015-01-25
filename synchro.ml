@@ -18,5 +18,6 @@ let synchro () =
 let boucle_s temps =
     while true do
         Thread.delay temps ;
-        synchro ()
+        synchro ();
+        Thread.yield()
     done 
