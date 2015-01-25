@@ -66,7 +66,7 @@ let display_digit (x,y) (*bottom left coordinates*) (segments :  bool
 let display_setting digits =
   set_color background;
   draw_poly_line [|dragdown (coords 7); dragdownright (coords
-  11)|];
+  10)|];
   draw_poly_line [|dragdown (coords 5); dragdownright (coords
   0)|];
   set_color foreground;
