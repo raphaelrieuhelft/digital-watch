@@ -15,9 +15,10 @@ let synchro () =
             force_marche() 
 
 
-let boucle_s temps =
-    while true do
+let boucle_s temps b =
+    let etape1 = ref true in
+    while b || !etape1 do
         Thread.delay temps ;
         synchro ();
-        Thread.yield()
+        etape1 := false
     done 

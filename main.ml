@@ -37,7 +37,7 @@ let main () = Arg.parse options (fun _ ->()) usage;
   then Compiler.interp p
   else 
     let t = Thread.create Microprocessor_simulator.start_simulation () in 
-    ignore(Thread.create (fun () -> Synchro.boucle_s temps_synchro) ());
+    ignore(Thread.create (fun () -> Synchro.boucle_s temps_synchro false) ());
         Thread.join t
 
 
