@@ -22,8 +22,8 @@ let value_to_value_with_ty v ty = match v,ty with
 
 
 
-let bits_to_int = Array.fold_right
-  (fun n b -> (2*n) + (if b then 1 else 0)) 0
+let bits_to_int t= Array.fold_right
+  (fun b n -> (2*n) + (if b then 1 else 0)) t 0
 
 
 

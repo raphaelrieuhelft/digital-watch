@@ -184,7 +184,7 @@ initialisation:
 		li $in3 0
 		li $in4 0
 		li $in5 0
-		lbi 1024		//$k0
+		lbi 4		//$k0
 reset:	li $qt 0
 		li $sc0 0
 		li $sc1 0
@@ -202,7 +202,7 @@ reset:	li $qt 0
 		li $yr1 0
 		li $yr 0		//initialiser à quelle année ? actellement 2000
 		li $nda 31
-		li $cr 0
+		li $cr 1
 		sd $sc0 0
 		sd $sc1 1 
 		sd $mn0 2
@@ -361,7 +361,7 @@ incrannees:
 		
 changevitesse:
 		lin $in5 5
-		lbi 1024
+		lbi 4
 		cbeq $in5 $zero
 		lbi 1
 		li $qt 0

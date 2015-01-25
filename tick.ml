@@ -1,4 +1,4 @@
-let interval = 1./.1024.
+let interval = 1./.4.
 (*let interval = 1.*)
 
 let compte = ref 0
@@ -12,8 +12,8 @@ let tick ()=
     incr compte;
     (*Format.printf "Temps système : %f@." (Unix.gettimeofday());*)
     if !compte=1024 then (
-      compte:=0;
-      Format.eprintf "Temps système : %f@." (Unix.gettimeofday())
+      compte:=0 (*;
+      Format.eprintf "Temps système : %f@." (Unix.gettimeofday())*)
     );
     wait_and_tick (next_tick+.interval)
   in wait_and_tick (Unix.gettimeofday())

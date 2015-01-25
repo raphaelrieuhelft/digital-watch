@@ -16,6 +16,7 @@ let sepDateTime = 30
 let edgeDown = 40
 let background=black
 let foreground = green
+let underlineSpace = 2
 
 let horizontal x y (*leftmost point*) = fill_poly [| (x,y); (x+em, y+em); (x+hor_seg_length-em, y+em); (x+hor_seg_length, y); (x+hor_seg_length-em, y-em); (x+em, y-em)|]
 
@@ -45,9 +46,11 @@ let coords  = function
 		
 		(*returns the coordinates of digit i in the graphical window*)
 
-    
-	  
-let display_digit (x,y) (*bottom left coordinates*) (segments :  bool array) =
+let dragdown (i,j) = (i, j-underlineSpace)
+let dragdownright (i,j) = (i+digit_width, j-underlineSpace)
+
+let display_digit (x,y) (*bottom left coordinates*) (segments :  bool
+						       array)  =
 	set_color background;
 	fill_rect x y digit_width digit_height;
 	set_color foreground;
@@ -60,6 +63,18 @@ let display_digit (x,y) (*bottom left coordinates*) (segments :  bool array) =
 	if segments.(6) then horizontal (x+em) (y+(digit_height/2));
 	()
 
+let display_setting digits =
+  set_color background;
+  draw_poly_line [|dragdown (coords 7); dragdownright (coords
+  11)|];
+  draw_poly_line [|dragdown (coords 5); dragdownright (coords
+  0)|];
+  set_color foreground;
+  let n = Netlist_utilities.bits_to_int digits in
+  match n with 
+    |0->()
+    |_->draw_poly_line [|dragdown (coords (2*n -1)); dragdownright (coords(2*n-2)) |]
+
 let display_colon (x,y) = 
   set_color foreground;
   fill_rect (x+((sepColon-4)/2)) (y+(digit_height/4)) 4 4;
@@ -71,14 +86,14 @@ let display_slash (x,y) =
 
 
 let update () =
-  let digits = Array.make nb_digits [||] in
-  let change = Array.make nb_digits false in
+  let digits = Array.make (nb_digits+1) [||] in
+  let change = Array.make (nb_digits+1) false in
   for i = 0 to nb_digits-1 do
     digits.(i)<-Array.make 7 false
   done;
   while true do
     Condition.wait Shared_memory.c Shared_memory.m_out;
-    for i = 0 to nb_digits-1 do
+    for i = 0 to nb_digits do
       let digit = Array.copy Shared_memory.digits_RAM.(i) in
       if digits.(i) = digit then () 
       else begin
@@ -91,9 +106,11 @@ let update () =
       if change.(i) then 
 	begin
 	  change.(i)<-false;
-		display_digit (coords i) digits.(i)
+	  display_digit (coords i) digits.(i)
+	    
 	end
-    done
+    done;
+    display_setting digits.(nb_digits)
   done
 
 let () = 

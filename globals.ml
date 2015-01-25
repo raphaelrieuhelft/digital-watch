@@ -40,7 +40,7 @@ let ident_to_filename = function
 	| _ -> failwith "ident_to_filename"
 *)
 
-let PC = "pcOut_1742"
+let pc = "pcOut_1742"
 	
 let microprocessor_filename = "microprocesseur/microprocesseur.net"
 

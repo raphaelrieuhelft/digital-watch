@@ -109,11 +109,11 @@ let read_input inputs id =
   
 let print_infos env =
   try
-	Format.printf "  instruction: %s@." (value_to_string (env.find programROM env));
-	Format.printf "  PC: %s@." (value_to_string (env.find PC env));
+	Format.printf "  instruction: %s@." (value_to_string (Env.find programROM env));
+	Format.printf "  PC: %s@." (value_to_string (Env.find pc env));
   with Not_found -> Format.printf "Not_found dans print_infos. Cela n'affecte pas l'exécution a priori"
 	
-let cycle curr_cycle p print_output env =	
+let cycle curr_cycle p env =	
   Format.printf "Cycle %d@." curr_cycle;
   let inputs = Shared_memory.get_inputs () in
   let env = List.fold_left (fun env id -> Env.add id (read_input inputs id) env) env p.p_inputs in
@@ -134,7 +134,7 @@ let simulate p =
   Init_memory.main reg_tbl rom_tbl ram_tbl p.p_eqs;
   let env = Env.empty in
   let rec cycles curr_cycle env =
-	let env = cycle curr_cycle p print_output env in
+	let env = cycle curr_cycle p env in
     cycles (curr_cycle+1) env
   in
   cycles 0 env
