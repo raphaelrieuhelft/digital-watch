@@ -114,7 +114,7 @@ printmn1debut:
 		j debut
 		
 suitehrdebut:		
-		cbeqi $hr0 0
+		cbeqi $hr0 10
 		j printhr0debut
 		li $hr0 0
 		incr $hr1 $hr1
