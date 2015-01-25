@@ -149,7 +149,7 @@ printmo0:
 		cbeqi $nda 31 
 		j set31		//après un mois à <31 jours vient toujours un mois à 31 jours
 		//après un mois à 31 jours, vient un à 30 jours, sauf août, février (janvier a déjà été testé)
-		cbeqi $nda 8 //août ?
+		cbeqi $mo 8 //août ?
 		j pasaout
 		j set31
 pasaout:
@@ -268,11 +268,11 @@ crsup3:	cbeqi $cr 3
 		j incrheures
 crsup4:	cbeqi $cr 4
 		j crsup5
-		j incrjours
+		j incrannees
 crsup5:	cbeqi $cr 5
 		j crsup6
 		j incrmois
-crsup6:	j incrannees
+crsup6:	j incrjours
 
 incrsecondes:
 		incr $sc0 $sc0
@@ -323,6 +323,11 @@ incrjours:
 		j debut
 		
 incrmois:
+		li $da 1     //on met le jour à 1, pour ne pas avoir de problème si on était le 31/01 par exemple
+		li $da0 1
+		li $da1 0
+		sd $da0 6
+		sd $da1 7
 		cbeqi $mo 12
 		j suitemodebut
 		li $mo 1

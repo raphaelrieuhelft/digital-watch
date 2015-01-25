@@ -90,9 +90,9 @@ Immediate de Send Digit / Send Output :
 	1 : secondes
 	2 : minutes
 	3 : heures
-	4 : jours
+	4 : années
 	5 : mois
-	6 : année
+	6 : jours
   )
 
 	
