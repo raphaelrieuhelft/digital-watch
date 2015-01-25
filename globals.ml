@@ -51,5 +51,5 @@ let interp_only = ref false
 
 (* Noms des fichiers source et cible *)
 let compiler_source_filename = ref code_assembleur
-let compiler_out_filename = ref programROM
+let compiler_out_filename = ref programROM_filename
 let compiler_printprogram_filename = ref "bin/printed_ast.s"

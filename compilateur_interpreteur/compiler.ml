@@ -36,7 +36,7 @@ let main () =
         let p2 = Precompilateur.main p in
 		if !print_precompiled then
 			begin
-			let out = open_out compiler_printprogram_filename in
+			let out = open_out !compiler_printprogram_filename in
 			let ff = Format.formatter_of_out_channel out in
 			Ast_printer.print_program ff p2
 			end;
@@ -44,9 +44,9 @@ let main () =
             Interpreteur.traite (Interpreteur.cree_tableau_inst p2)
         else 
 			begin
-			let out = open_out compiler_out_filename in
+			let out = open_out !compiler_out_filename in
 			let ff = Format.formatter_of_out_channel out in
-            List.iter (fun s -> fprintf ff (s ^"\n")) (Production_code.prod_prog p2)
+			List.iter (fun s -> fprintf ff "%s@." s) (Production_code.prod_prog p2)
 			end
 		end
   with
