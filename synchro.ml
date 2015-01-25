@@ -11,6 +11,6 @@ let synchro () =
         reset();
         List.iter (fun n -> repete incremente_reglage_courant n ; change_reglage_courant) [t.Unix.tm_sec ; t.tm_min + 1 ; t.tm_hour ; t.tm_mday ; t.tm_mon ; t.tm_year - 100 ] ;
         let t2 = demande_temps () in
-            Unix.wait (60 - (t2.Unix.tm_sec - t.Unix.tm_sec + 60 * (t2.tm_min - t1.tm_min))) ;
+            Thread.delay (float_of_int((60 - (t2.Unix.tm_sec - t.Unix.tm_sec + 60 * (t2.tm_min - t1.tm_min)))) ;
             force_marche() ;
 
