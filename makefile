@@ -3,6 +3,7 @@ OCAMLBUILD=ocamlbuild -classic-display \
 	-libs unix \
 	-libs graphics \
 	-I compilateur_interpreteur \
+	-I inputs \
 	-I simulateur_netlist \
 		-I simulateur_netlist/netlist_analyser \
 		-I simulateur_netlist/scheduling \
