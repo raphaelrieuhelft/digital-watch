@@ -104,8 +104,14 @@ let read_input inputs id =
 	let i = input_string_to_int id in
 	VBit inputs.(i)
 	
-let print_output id v =
-  Format.printf "  output %s : %s@." id (value_to_string v)
+(*let print_output id v =
+  Format.printf "  output %s : %s@." id (value_to_string v)*)
+  
+let print_infos env =
+  try
+	Format.printf "  instruction: %s@." (value_to_string (env.find programROM env));
+	Format.printf "  PC: %s@." (value_to_string (env.find PC env));
+  with Not_found -> Format.printf "Not_found dans print_infos. Cela n'affecte pas l'exécution a priori"
 	
 let cycle curr_cycle p print_output env =	
   Format.printf "Cycle %d@." curr_cycle;
@@ -113,7 +119,8 @@ let cycle curr_cycle p print_output env =
   let env = List.fold_left (fun env id -> Env.add id (read_input inputs id) env) env p.p_inputs in
   let env = List.fold_left (compute_eq p.p_vars) env p.p_eqs in
   List.iter (write_eq env) p.p_eqs; 
-  List.iter (fun id -> print_output id (Env.find id env)) p.p_outputs;
+  (*List.iter (fun id -> print_output id (Env.find id env)) p.p_outputs;*)
+  print_infos env;
   if !wait_between_cycles then
     (
       Format.printf "End Cycle %d   (enter to move on)%!" curr_cycle;

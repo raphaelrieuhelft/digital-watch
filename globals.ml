@@ -33,12 +33,14 @@ let registersRAM_word_size = 12
 let digitsRAM = "output"
 let digitsRAM_addr_size = 4
 let digitsRAM_word_size = 7
-
+(*
 let ident_to_filename = function
 	| s when s=programROM -> programROM_filename
 	| s when s=dec7 -> dec7_filename
 	| _ -> failwith "ident_to_filename"
-	
+*)
+
+let PC = "pcOut_1742"
 	
 let microprocessor_filename = "microprocesseur/microprocesseur.net"
 
