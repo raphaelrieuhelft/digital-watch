@@ -1,4 +1,4 @@
-let interval = 1./.4.
+let interval = 1./.8.
 (*let interval = 1.*)
 
 let compte = ref 0
