@@ -21,17 +21,10 @@ let value_to_value_with_ty v ty = match v,ty with
   | _ -> failwith "value_to_value_with_ty"
 
 
-let bits_to_int t =
-  let rec aux i pow acc =
-    if i<0 then acc 
-	else
-	  let acc = if t.(i) then acc+pow else acc in
-	  aux (i-1) (2*pow) acc
-  in aux ((Array.length t)-1) 1 0
-(*
-let bits_to_int = Array.fold_left
+
+let bits_to_int = Array.fold_right
   (fun n b -> (2*n) + (if b then 1 else 0)) 0
-*)
+
 
 
 let value_to_string = function
@@ -49,12 +42,12 @@ let value_to_string = function
 let int_to_binary_string size n =
   let s = String.make size '0' in
   let rec aux i m =
-    if i<0 then () else
+    if i>=size then () else
     begin
     if m mod 2 = 1 then s.[i] <- '1';
-    aux (i-1) (m/2)
+    aux (i+1) (m/2)
     end
-  in aux (size-1) n;
+  in aux 0 n;
   s
 
 
