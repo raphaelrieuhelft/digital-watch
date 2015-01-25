@@ -19,7 +19,6 @@ let cvs n lim =  conv_s (convertit2 n lim)
 let convrs n = cvs n 5
 
 let rec prod_inst = function
-    | Ivide -> "" (* faire gaffe si pas d'interaction malencontresue avec le code precompilateur de Diane *)
     | Icbeq (x,y) -> "0110" ^ (convrs x) ^(convrs y) ^ "00"
     | Ij x -> "0100" ^ (cvs x 9) ^ "000"
     | Ili (x,y) -> "1001" ^ (convrs x) ^(cvs y 7)
