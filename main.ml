@@ -19,6 +19,7 @@ let options =
 let usage = ""(*"usage: minic++ [option] file.cpp"*)
 
 
+let temps_synchro = 5.0
 
 
 	
@@ -32,6 +33,7 @@ let main () = Arg.parse options (fun _ ->()) usage;
   ignore(Thread.create Inputs.handle_inputs ());
   ignore(Thread.create (fun () -> Unix.sleep 2;
     Shared_memory.switch_input 1) ());
+  ignore(Thread.create (fun () -> Synchro.boucle_s temps_synchro) ());
   if !Globals.interp_only
   then Compiler.interp p
   else 
