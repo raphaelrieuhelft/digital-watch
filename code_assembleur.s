@@ -126,7 +126,7 @@ printhr0debut:
 suitedadebut:
 		incr $da $da
 		incr $da0 $da0
-		cbeqi $da 10
+		cbeqi $da0 10
 		j printda0debut
 		li $da0 0
 		incr $da1 $da1

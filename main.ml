@@ -41,6 +41,7 @@ let main () = Arg.parse options (fun _ ->()) usage;
   Shared_memory.switch_input 5;
   ignore(Thread.create Tick.tick ());
   ignore(Thread.create Display.update ());
+  ignore(Thread.create Inputs.handle_inputs ());
   ignore(Thread.create (fun () -> Unix.sleep 2;
     Shared_memory.switch_input 1) ());
 	(*let t = make_ast() in
