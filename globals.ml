@@ -44,8 +44,10 @@ let microprocessor_filename = "microprocesseur/microprocesseur.net"
 
 
 (* Option du compilateur *)
+let compile = ref true
+let print_precompiled = ref false
 let parse_only = ref false
-let interp_only = ref true
+let interp_only = ref false
 
 (* Noms des fichiers source et cible *)
 let compiler_source_filename = ref code_assembleur

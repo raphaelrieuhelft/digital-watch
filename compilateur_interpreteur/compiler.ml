@@ -31,21 +31,24 @@ let main () =
     let p = Parser.prog Lexer.token buf in
 	close_in f ;
        	(* On s'arrête ici si on ne veut faire que le parsing *)
-   	if !parse_only then 
-		exit 0
-    else 
+   	if not !parse_only then
+		begin
         let p2 = Precompilateur.main p in
-        if !interp_only then begin
+		if !print_precompiled then
+			begin
+			let out = open_out compiler_printprogram_filename in
+			let ff = Format.formatter_of_out_channel out in
+			Ast_printer.print_program ff p2
+			end;
+        if !interp_only then
             Interpreteur.traite (Interpreteur.cree_tableau_inst p2)
-        end
-        else begin
-            List.iter (fun s -> if s <> "" then print_string (s ^"\n");) (Production_code.prod_prog p2)
-        end;(*let tarbre = Typing.typfichier p in*)
-				(*Compilateur.compile_fichier tarbre !ofile ;
-				(*print_string "OK.\n";*)
-				exit 0;
-			end*)
-       	(*Interp.prog p *)
+        else 
+			begin
+			let out = open_out compiler_out_filename in
+			let ff = Format.formatter_of_out_channel out in
+            List.iter (fun s -> fprintf ff (s ^"\n")) (Production_code.prod_prog p2)
+			end
+		end
   with
     | Lexer.Lexing_error c -> 
 	localisation (Lexing.lexeme_start_p buf);
