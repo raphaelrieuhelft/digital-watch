@@ -19,7 +19,8 @@ let options =
 let usage = ""(*"usage: minic++ [option] file.cpp"*)
 
 
-let temps_synchro = 5.0
+let temps_synchro = 60.0
+let tstart = 3.0
 
 
 	
@@ -37,7 +38,7 @@ let main () = Arg.parse options (fun _ ->()) usage;
   then Compiler.interp p
   else 
     let t = Thread.create Microprocessor_simulator.start_simulation () in 
-    ignore(Thread.create (fun () -> Synchro.boucle_s temps_synchro false) ());
+    ignore(Thread.create (fun () -> Synchro.boucle_s tstart temps_synchro true) ());
         Thread.join t
 
 
