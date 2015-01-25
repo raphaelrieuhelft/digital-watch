@@ -2,7 +2,7 @@ open Graphics
 open Shared_memory
 open Input_helpers
 
-let temps_synchro = 60.0
+let temps_synchro = 0.0
 let tstart = 0.0
 
 let on_input c = match c with
