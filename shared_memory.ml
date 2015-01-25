@@ -14,6 +14,10 @@
  let m_out = Mutex.create()
  let c = Condition.create()
  
+ let switch_input i =
+   Mutex.lock m_in;
+   microprocessor_inputs.(i) <- not microprocessor_inputs.(i);
+   Mutex.unlock m_in
  
  let get_inputs () = 
 	Mutex.lock m_in;

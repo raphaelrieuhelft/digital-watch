@@ -5,20 +5,8 @@ open Format
 
 
 
-let localisation pos =
-  let l = pos.pos_lnum in
-  let c = pos.pos_cnum - pos.pos_bol + 1 in
-  eprintf "File \"%s\", line %d, characters %d-%d:\n"
-    Globals.code_assembleur (c-1) c
 
-let doublelocal (p,q) =
-  let l1 = p.pos_lnum in
-  let c1 = p.pos_cnum - p.pos_bol + 1 in
-  let l2 = q.pos_lnum in
-  let c2 = q.pos_cnum - q.pos_bol + 1 in
-	if l1 = l2 then
-		eprintf "L'erreur se trouve à la ligne %d, commence au caractère %d et se finit au caractère %d :\n" l1 c1 c2	
-	else eprintf "L'erreur se trouve entre les lignes %d et %d, commence au caractère %d et se finit au caractère %d :\n" l1 l2 c1 c2
+
 
 let make_ast()=  
   let f = open_in Globals.code_assembleur in
@@ -43,7 +31,11 @@ let main () =
 
 
   let t = make_ast() in
+  Shared_memory.switch_input 5;
+  ignore(Thread.create Tick.tick ());
   ignore(Thread.create Display.update ());
+  ignore(Thread.create (fun () -> Unix.sleep 5;
+    Shared_memory.switch_input 1) ());
   Interpreteur.traite (Interpreteur.cree_tableau_inst t)
 
 

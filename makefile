@@ -7,7 +7,7 @@ OCAMLBUILD=ocamlbuild -classic-display \
 		-I simulateur_netlist/netlist_analyser \
 		-I simulateur_netlist/scheduling \
 	-use-menhir
-TARGET=byte
+TARGET=native
 
 
 main:
