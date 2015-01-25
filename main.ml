@@ -33,12 +33,12 @@ let main () = Arg.parse options (fun _ ->()) usage;
   ignore(Thread.create Inputs.handle_inputs ());
   ignore(Thread.create (fun () -> Unix.sleep 2;
     Shared_memory.switch_input 1) ());
-  ignore(Thread.create (fun () -> Synchro.boucle_s temps_synchro) ());
   if !Globals.interp_only
   then Compiler.interp p
   else 
     let t = Thread.create Microprocessor_simulator.start_simulation () in 
-    Thread.join t
+    ignore(Thread.create (fun () -> Synchro.boucle_s temps_synchro) ());
+        Thread.join t
 
 
 let () = main ()
