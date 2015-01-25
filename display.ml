@@ -64,6 +64,7 @@ let display_digit (x,y) (*bottom left coordinates*) (segments :  bool
 	()
 
 let display_setting digits =
+  let disp_to_coords = [|(0,0); (1, 0); (3, 2); (5, 4); (11,10); (9,8); (7,6)|] in
   set_color background;
   draw_poly_line [|dragdown (coords 7); dragdownright (coords
   10)|];
@@ -73,7 +74,7 @@ let display_setting digits =
   let n = Netlist_utilities.bits_to_int digits in
   match n with 
     |0->()
-    |_->draw_poly_line [|dragdown (coords (2*n -1)); dragdownright (coords(2*n-2)) |]
+    |_->let (i,j) = disp_to_coords.(n) in draw_poly_line [|dragdown (coords i); dragdownright (coords j) |]
 
 let display_colon (x,y) = 
   set_color foreground;
