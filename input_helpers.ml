@@ -1,7 +1,7 @@
 open Shared_memory
 
-
-let wait () = Thread.delay 0.3
+let delais = 0.3
+let wait () = Thread.delay delais
 
 let force_pause () = set_input 1 false
 let force_marche () = set_input 1 true
