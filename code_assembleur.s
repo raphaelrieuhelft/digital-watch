@@ -138,7 +138,7 @@ printda0debut:
 suitemodebut:
 		incr $mo $mo
 		incr $mo0 $mo0
-		cbeq $mo0 10
+		cbeqi $mo0 10
 		j printmo0
 		li $mo0 0
 		incr $mo1 $mo1

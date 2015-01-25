@@ -31,8 +31,8 @@ let rec bools_of_int n i = match i with
   |0 -> if n>0 then failwith"n trop grand" else []
   |i -> (n mod 2 = 1)::(bools_of_int (n/2) (i-1))
 
-let print = ref false
-let wait = ref false
+let print = ref true
+let wait = ref true
 
 let traite t =
   let n = Array.length t in
