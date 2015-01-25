@@ -24,17 +24,19 @@ let usage = ""(*"usage: minic++ [option] file.cpp"*)
 	
 
 let main () = Arg.parse options (fun _ ->()) usage;
-  (*Microprocessor_simulator.start_simulation ()*)
-
-
-  
+  let p = Compiler.precompile () in
+  if !Globals.compile then Compiler.compile p;
   Shared_memory.switch_input 5;
   ignore(Thread.create Tick.tick ());
   ignore(Thread.create Display.update ());
   ignore(Thread.create Inputs.handle_inputs ());
   ignore(Thread.create (fun () -> Unix.sleep 2;
     Shared_memory.switch_input 1) ());
-  Compiler.main ()
+  if !Globals.interp_only
+  then Compiler.interp p
+  else 
+    let t = Thread.create Microprocessor_simulator.start_simulation () in 
+    Thread.join t
 
 
 let () = main ()

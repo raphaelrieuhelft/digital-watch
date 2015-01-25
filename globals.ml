@@ -15,21 +15,22 @@ for i=0 to ninputs-1 do
 done;
 *)
 let code_assembleur = "code_assembleur.s"
-let programROM = "program"
+let programROM = "instr"
 let programROM_filename = "bin/program.bin"
 let programROM_addr_size = 9
 let programROM_word_size = 16
 
-let dec7 = "dec7"
+let dec7 = "DEC7_1623"
 let dec7_filename = "bin/dec7.bin"
 let dec7_addr_size = 4
 let dec7_word_size = 7
 
-let registersRAM = "register"
+let registersRAM = "regOut"
+let registersRAM2 = "out2_332"
 let registersRAM_addr_size = 5
 let registersRAM_word_size = 12
 
-let digitsRAM = "digits"
+let digitsRAM = "output"
 let digitsRAM_addr_size = 4
 let digitsRAM_word_size = 7
 

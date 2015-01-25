@@ -18,7 +18,7 @@ let doublelocal (p,q) =
 	else eprintf "L'erreur se trouve entre les lignes %d et %d, commence au caractère %d et se finit au caractère %d :\n" l1 l2 c1 c2
 	
 	
-let main () = 
+let precompile () = 
   let f = open_in !compiler_source_filename in
   let buf = Lexing.from_channel f in
   
@@ -29,26 +29,15 @@ let main () =
        La fonction Lexer.token est utilisée par Parser.prog pour obtenir 
        le prochain token. *)
     let p = Parser.prog Lexer.token buf in
-	close_in f ;
-       	(* On s'arrête ici si on ne veut faire que le parsing *)
-   	if not !parse_only then
-		begin
-        let p2 = Precompilateur.main p in
-		if !print_precompiled then
-			begin
-			let out = open_out !compiler_printprogram_filename in
-			let ff = Format.formatter_of_out_channel out in
-			Ast_printer.print_program ff p2
-			end;
-        if !interp_only then
-            Interpreteur.traite (Interpreteur.cree_tableau_inst p2)
-        else 
-			begin
-			let out = open_out !compiler_out_filename in
-			let ff = Format.formatter_of_out_channel out in
-			List.iter (fun s -> fprintf ff "%s@." s) (Production_code.prod_prog p2)
-			end
-		end
+    close_in f;  
+    let p2 = Precompilateur.main p in
+    if !print_precompiled then
+      begin
+	let out = open_out !compiler_printprogram_filename in
+	let ff = Format.formatter_of_out_channel out in
+	Ast_printer.print_program ff p2
+      end;
+    p2
   with
     | Lexer.Lexing_error c -> 
 	localisation (Lexing.lexeme_start_p buf);
@@ -68,3 +57,9 @@ let main () =
         eprintf "Erreur du compilateur.\n";
         exit 2 
 *)
+let compile p =
+	let out = open_out !compiler_out_filename in
+	let ff = Format.formatter_of_out_channel out in
+	List.iter (fun s -> fprintf ff "%s@." s) (Production_code.prod_prog p)
+let interp p =
+  Interpreteur.traite (Interpreteur.cree_tableau_inst p)

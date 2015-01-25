@@ -31,7 +31,8 @@ let eval_arg_to_array env arg = array_of_value (eval_arg env arg)
 
 let eval_exp env id = function
   | Earg arg -> eval_arg env arg
-  | Ereg _ -> VBit (Hashtbl.find reg_tbl id)
+  | Ereg _ -> (try VBit (Hashtbl.find reg_tbl id) with Not_found ->
+    Format.eprintf "flip-flop not found : %s@." id; raise Not_found)
   | Enot arg -> VBit (not (eval_arg_to_bool env arg))
   | Ebinop (op,arg1,arg2) ->
     let b1 = eval_arg_to_bool env arg1 and b2 = eval_arg_to_bool env arg2 in
@@ -43,15 +44,18 @@ let eval_exp env id = function
   | Erom (_,_,arg) -> 
     let t = eval_arg_to_array env arg in
 	let addr = bits_to_int t in
-	let rom = Hashtbl.find rom_tbl id in
+	(try let rom = Hashtbl.find rom_tbl id in
 	VBitArray (rom.(addr))
+	with Not_found -> Format.eprintf "ROM not found : %s@." id;
+	  raise Not_found)
   | Eram (_,_,ra_arg,we_arg,wa_arg,arg) ->
-	if id=digitsRAM then VBitArray(Array.make digitsRAM_word_size false) else (*value read in digitsRAM is unused in netlist*)
-    let ram = Hashtbl.find ram_tbl id in
-    let ra_t = eval_arg_to_array env ra_arg in
-    let r_addr = bits_to_int ra_t in
-    let t = ram.(r_addr) in
-    VBitArray t
+    if id=digitsRAM then VBitArray(Array.make digitsRAM_word_size false) else (*value read in digitsRAM is unused in netlist*)
+      let ram = try Hashtbl.find ram_tbl id with Not_found ->
+	Format.eprintf "RAM not found : %s@." id; assert false  in
+      let ra_t = eval_arg_to_array env ra_arg in
+      let r_addr = bits_to_int ra_t in
+      let t = ram.(r_addr) in
+      VBitArray t
   | Econcat (arg1,arg2) ->
     let t1 = eval_arg_to_array env arg1 and t2 = eval_arg_to_array env arg2 in
     VBitArray (Array.append t1 t2)
@@ -86,8 +90,9 @@ let write_eq env (id,exp) = try match exp with
 	  let data = eval_arg_to_array env arg in
 	  if id=digitsRAM then Shared_memory.write_in_digitsRAM w_addr data
 	  else
-		let ram = Hashtbl.find ram_tbl id in
-		ram.(w_addr) <- data
+	    let ram = try Hashtbl.find ram_tbl id with Not_found ->
+	      Format.eprintf "RAM not found : %s@." id; assert false in
+	    ram.(w_addr) <- data
   | Earg _ | Enot _ | Ebinop _ | Emux _ | Erom _ | Econcat _ | Eslice _ | Eselect _
     -> ()
   with exn ->

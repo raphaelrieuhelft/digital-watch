@@ -33,14 +33,18 @@ let init_ROMs rom_tbl =
 	Hashtbl.add rom_tbl dec7 (Read_binary_file.main dec7_addr_size dec7_word_size dec7_filename)
 
 let init_RAM ram_tbl =
-	Hashtbl.add ram_tbl registersRAM (new_ram registersRAM_addr_size registersRAM_word_size)
+  Hashtbl.add ram_tbl registersRAM (new_ram registersRAM_addr_size
+  registersRAM_word_size);
+  Hashtbl.add ram_tbl registersRAM2 (new_ram registersRAM_addr_size registersRAM_word_size)
  
 let main reg_tbl rom_tbl ram_tbl eqs =
   Hashtbl.clear reg_tbl; Hashtbl.clear rom_tbl; Hashtbl.clear ram_tbl;
   init_registers reg_tbl eqs;
+  try begin
   init_ROMs rom_tbl;
   init_RAM ram_tbl
-  
+  end
+  with Not_found -> Format.eprintf "init_memory failure@."; raise Not_found
   
   (*
   List.iter (fun (id,exp) -> match exp with

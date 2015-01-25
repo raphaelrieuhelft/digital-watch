@@ -30,4 +30,12 @@ let rec prod_inst = function
     | Isd(x,y) ->"0010" ^ (convrs x) ^(cvs y 4) ^ "000"
 
 
-let prod_prog  p = (*String.concat "\n" *)(List.map (fun (x,y) -> try prod_inst x with Depassement (s,i) -> raise (LDepassement (s^"\nA la ligne : "^string_of_int(y),i, y))) p)
+let prod_prog  p = (*String.concat "\n" *)(List.map (fun (x,y) -> try
+								    prod_inst
+								      x
+  with Depassement (s,i) -> raise (LDepassement (s^"\nA la ligne :
+"^string_of_int(y),i, y))) p)@Array.to_list (Array.make ((1 lsl
+							    Globals.programROM_addr_size)-List.length
+							    p)
+					       (String.make
+						  Globals.programROM_word_size '0'))
