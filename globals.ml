@@ -40,3 +40,15 @@ let ident_to_filename = function
 	
 	
 let microprocessor_filename = "microprocesseur/microprocesseur.net"
+
+
+
+(* Option du compilateur *)
+let parse_only = ref false
+let interp_only = ref true
+
+(* Noms des fichiers source et cible *)
+let compiler_source_filename = ref code_assembleur
+let compiler_out_filename = ref programROM
+let compiler_printprogram_filename
+

@@ -1,28 +1,6 @@
-
-(* Fichier principal du compilateur mini-c++ *)
-
 open Format
 open Lexing
-(* Option de compilation, pour s'arrêter à l'issue du parser *)
-let parse_only = ref false
-let interp_only = ref false
-
-(* Noms des fichiers source et cible *)
-let ifile = ref ""
-let ofile = ref ""
-
-let set_file f s = f := s 
-
-(* Les options du compilateur que l'on affiche en tapant arithc --help *)
-let options = 
-  ["--parse-only", Arg.Set parse_only, 
-   "  Pour ne faire uniquement que la phase d'analyse syntaxique" ; 
-   "--interp", Arg.Set interp_only ,
-   "  Pour interpréter au lieu de compiler" ;
-   "-o", Arg.String (set_file ofile), 
-   "<file>  Pour indiquer le mom du fichier de sortie"]
-
-let usage = "usage: minic++ [option] file.cpp"
+open Globals
 
 (* localise une erreur en indiquant la ligne et la colonne *)
 let localisation pos =
@@ -38,25 +16,10 @@ let doublelocal (p,q) =
 	if l1 = l2 then
 		eprintf "L'erreur se trouve à la ligne %d, commence au caractère %d et se finit au caractère %d :\n" l1 c1 c2	
 	else eprintf "L'erreur se trouve entre les lignes %d et %d, commence au caractère %d et se finit au caractère %d :\n" l1 l2 c1 c2
-let () = 
-  (* Parsing de la ligne de commande *)
-  Arg.parse options (set_file ifile) usage;
-
-  (* On vérifie que le nom du fichier source a bien été indiqué *)
-  if !ifile="" then begin eprintf "Aucun fichier à compiler\n@?"; exit 1 end; 
-(*
-  (* Ce fichier doit avoir l'extension .cpp *)
-  if not (Filename.check_suffix !ifile ".cpp") then begin
-    eprintf "Le fichier d'entrée doit avoir l'extension .cpp\n@?";
-    Arg.usage options usage;
-    exit 1
-  end;
-*)
-  if !ofile="" then ofile := Filename.chop_suffix !ifile ".exp" ^ ".s";
-  (* Ouverture du fichier source en lecture *)
-  let f = open_in !ifile in
-    
-  (* Création d'un tampon d'analyse lexicale *)
+	
+	
+let main () = 
+  let f = open_in !compiler_source_filename in
   let buf = Lexing.from_channel f in
   
   try
@@ -73,12 +36,10 @@ let () =
     else 
         let p2 = Precompilateur.main p in
         if !interp_only then begin
-            Interpreteur.traite (Interpreteur.cree_tableau_inst p2) ;
-            exit 0
+            Interpreteur.traite (Interpreteur.cree_tableau_inst p2)
         end
         else begin
-            List.iter (fun s -> if s <> "" then print_string (s ^"\n");) (Production_code.prod_prog p2) ;
-            exit 0 
+            List.iter (fun s -> if s <> "" then print_string (s ^"\n");) (Production_code.prod_prog p2)
         end;(*let tarbre = Typing.typfichier p in*)
 				(*Compilateur.compile_fichier tarbre !ofile ;
 				(*print_string "OK.\n";*)
@@ -87,18 +48,14 @@ let () =
        	(*Interp.prog p *)
   with
     | Lexer.Lexing_error c -> 
-	(* Erreur lexicale. On récupère sa position absolue et 
-	   on la convertit en numéro de ligne *)
 	localisation (Lexing.lexeme_start_p buf);
 	eprintf "Erreur dans l'analyse lexicale: %s@." c;
-	exit 1
+	exit 2
     | Parser.Error -> 
-	(* Erreur syntaxique. On récupère sa position absolue et on la 
-	   convertit en numéro de ligne *)
 	localisation (Lexing.lexeme_start_p buf);
 	eprintf "Erreur dans l'analyse syntaxique@.";
-	exit 1
-    | Precompilateur.LabelInexistant (x,y) -> print_string( "Label inexistant : "^x^"\nligne : "^string_of_int(y))
+	exit 2
+	| exn -> eprintf "Erreur inconnue dans Compiler.compile@."; raise exn
   (*  | Failure s ->
 	localisation (Lexing.lexeme_start_p buf);
         eprintf "Erreur du compilateur : message :  %s" s;
@@ -107,8 +64,4 @@ let () =
         localisation (Lexing.lexeme_start_p buf);
         eprintf "Erreur du compilateur.\n";
         exit 2 
-	
-
-
-
 *)

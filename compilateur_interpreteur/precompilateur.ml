@@ -62,12 +62,13 @@ try
   handle_labels labels p2
 with
   | LabelDejaExistant(lab,pos) -> 
-    Format.eprintf "Ligne %d : définition d'un label \"%s\" déjà existant.@." pos lab;
+    Format.eprintf "[Précompilateur] Ligne %d : définition d'un label \"%s\" déjà existant.@." pos lab;
 	exit 2
   | LabelInexistant(lab,pos) -> 
-    Format.eprintf "Ligne %d : label \"%s\" inconnu.@." pos lab;
+    Format.eprintf "[Précompilateur] Ligne %d : label \"%s\" inconnu.@." pos lab;
 	exit 2
   | ConflitLabels(pos) -> 
-    Format.eprintf "Ligne %d : deux labels sont définis successivement à cause d'une instruction vide ; on ne sait pas retenir les deux@." pos;
+    Format.eprintf "[Précompilateur] Ligne %d : deux labels sont définis successivement à cause d'une instruction vide ; on ne sait pas retenir les deux@." pos;
 	exit 2
+  | exn -> Format.eprintf "Erreur inconnue dans le précompilateur@."; raise exn
   
