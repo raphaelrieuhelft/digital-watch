@@ -17,11 +17,11 @@ let rec repete f n = match n with
 
 let synchro () =
 	let t = gettimeofday () in
-    let tm = localtime () in
+	let tm = localtime t in
 	let tm_valeurs = valeurs tm in
 	let nombre_wait_estime = (List.fold_left (fun a x -> a+x) 0 tm_valeurs) + 9 in
-	let ajouter_minute = delais.*(float_of_int nombre_wait_estime)+.(float_of_int tm.tm_sec) >= 30. in
-	let tm_valeurs = if ajouter_minute then valeurs (t+.60.) else tm_valeurs in
+	let ajouter_minute = delais*.(float_of_int nombre_wait_estime)+.(float_of_int tm.tm_sec) >= 30. in
+	let tm_valeurs = if ajouter_minute then valeurs (localtime (t+.60.)) else tm_valeurs in
     reset();
 	change_reglage_courant();
     List.iter (fun n -> repete incremente_reglage_courant n ; change_reglage_courant ()) tm_valeurs;
