@@ -53,11 +53,9 @@ $nda : nombre de jours dans le mois courant
 
 $cr : réglage courant
 
-($s0 (nom à revoir) : dernier état vu du quartz) -> $in0
 $in0, $in1, $in2, $in3, $in4, $in5 : dernier état vu de chaque entrée
 
 $k0 : destination de l'instruction lbi ; on y stocke la fréquence du quartz, ou 1 si on veut faire tourner la montre le plus vite possible
-($ra : adresse de retour) sans doute supprimé
 $at : temporaire assembleur, utilisé pour la pseudoinstruction cbeqi
 $zero : toujours 0
 
