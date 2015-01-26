@@ -123,5 +123,9 @@ let () =
   display_slash ((fst (coords 7))+2*digit_width+space, snd(coords
   11));
   display_slash ((fst (coords 9))+2*digit_width+space, snd(coords
-  11))
+							     11)) ;
+  moveto edgeTime ((size_y())-edgeDown);
+  draw_string "T to autoset time, Enter to run, P to pause.";
+  moveto edgeTime ((size_y())-edgeDown-12);
+  draw_string "While in pause : S to change speed, Tab/space to set time manually"
 
