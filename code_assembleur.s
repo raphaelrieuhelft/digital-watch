@@ -184,7 +184,7 @@ initialisation:
 		li $in3 0
 		li $in4 0
 		li $in5 0
-		lbi 8		//$k0
+		lbi 32		//$k0
 reset:	li $qt 0
 		li $sc0 0
 		li $sc1 0
@@ -366,7 +366,7 @@ incrannees:
 		
 changevitesse:
 		lin $in5 5
-		lbi 8
+		lbi 32
 		cbeq $in5 $zero
 		lbi 1
 		li $qt 0

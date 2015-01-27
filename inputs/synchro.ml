@@ -20,7 +20,7 @@ let synchro () =
 	let tm = localtime t in
 	let tm_valeurs = valeurs tm in
 	let nombre_wait_estime = (List.fold_left (fun a x -> a+x) 0 tm_valeurs) + 9 in
-	let ajouter_minute = delais*.(float_of_int nombre_wait_estime)+.(float_of_int tm.tm_sec) >= 30. in
+	let ajouter_minute = Input_helpers.delais*.(float_of_int nombre_wait_estime)+.(float_of_int tm.tm_sec) >= 30. in
 	let tm_valeurs = if ajouter_minute then valeurs (localtime (t+.60.)) else tm_valeurs in
     reset();
 	change_reglage_courant();
