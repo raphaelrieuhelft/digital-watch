@@ -66,7 +66,7 @@ Immediate de Load Input :
 1 : marche/pause (0:pause, 1:marche)
 2 : changer réglage courant
 3 : incrémenter grandeur correspondant au réglage courant
-4 : reset (an 2000 ?)
+4 : reset (an 2000)
 5 : changer vitesse (0:normale, 1:maximale)
 appuyer sur un bouton se manifeste par un changement d'état entre 0 et 1
 

@@ -156,10 +156,10 @@ pasaout:
 		cbeqi $mo 2 //février ?
 		j set30
 fevrier:
-		li $nda 28
+		li $nda 29
 		modf $yr $t0
 		cbeq $t0 $zero //année bissextile?
-		li $nda 29
+		li $nda 28
 		j debut
 set31:	li $nda 31
 		j debut
